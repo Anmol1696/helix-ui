@@ -15,9 +15,9 @@ const App: React.FunctionComponent = () => {
           <Route
             path='/'
             element={<Portfolio />} 
-            errorElement={<Error />} 
           />
           <Route path='/BuySell' element={<BuySell />} />
+          <Route path='*' element={<Error />} />
         </Routes>
       </Router> 
     </>
