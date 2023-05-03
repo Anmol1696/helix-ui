@@ -2,9 +2,9 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Sidebar from './components/Sidebar'
-
-import Portfolio from './pages/Portfolio';
 import BuySell from './pages/BuySell';
+import Error from './pages/Error';
+import Portfolio from './pages/Portfolio';
 
 const App: React.FunctionComponent = () => {
   return (
@@ -12,8 +12,12 @@ const App: React.FunctionComponent = () => {
       <Router>
         <Sidebar />
         <Routes>
-          <Route path='/' element={<Portfolio />} />
-          <Route path='/team' element={<BuySell />} />
+          <Route
+            path='/'
+            element={<Portfolio />} 
+            errorElement={<Error />} 
+          />
+          <Route path='/BuySell' element={<BuySell />} />
         </Routes>
       </Router> 
     </>

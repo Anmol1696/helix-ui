@@ -12,6 +12,7 @@ import Toolbar from '@mui/material/Toolbar';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import  React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const mdTheme = createTheme();
 const drawerWidth: number = 240;
@@ -44,13 +45,19 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const mainListItems = (
   <React.Fragment>
-    <ListItemButton>
+    <ListItemButton
+      component={Link}
+      to={"/"}
+    >
       <ListItemIcon>
         <TrendingUpIcon />
       </ListItemIcon>
       <ListItemText primary="Portfolio" />
     </ListItemButton>
-    <ListItemButton>
+    <ListItemButton
+        component={Link}
+        to={"/BuySell"}
+      >
       <ListItemIcon>
         <CurrencyExchangeIcon />
       </ListItemIcon>
