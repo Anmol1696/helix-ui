@@ -22,12 +22,12 @@ const cryptoIdToTickerAndName = {
     'bitcoin': { ticker: 'BTC', name: 'Bitcoin' },
     'ethereum': { ticker: 'ETH', name: 'Ethereum' },
     'binancecoin': { ticker: 'BNB', name: 'Binance Coin' },
-    'avalanche': { ticker: 'AVAX', name: 'Avalanche' },
-    'polygon': { ticker: 'MATIC', name: 'Polygon' },
+    'avalanche-2': { ticker: 'AVAX', name: 'Avalanche' },
+    'matic-network': { ticker: 'MATIC', name: 'Polygon' },
     'cosmos': { ticker: 'ATOM', name: 'Cosmos' },
     'osmosis': { ticker: 'OSMO', name: 'Osmosis' },
     'crypto-com-chain': { ticker: 'CRO', name: 'Cronos' },
-    'injective': { ticker: 'INJ', name: 'Injective' },
+    'injective-protocol': { ticker: 'INJ', name: 'Injective' },
     'kava': { ticker: 'KAVA', name: 'Kava' },
     'polkadot': { ticker: 'DOT', name: 'Polkadot' },
     'fantom': { ticker: 'FTM', name: 'Fantom' },
@@ -44,7 +44,7 @@ export const fetchCryptoData = createAsyncThunk('cryptoData/fetch', async () => 
     const response = await axios.get<{ [key: string]: { usd: number; usd_market_cap: number } }>(url);
 
     const cryptoData: CryptoData = {};
-  
+    console.log('test');
     Object.entries(response.data).forEach(([id, data]) => {
       cryptoData[id] = {
         name: cryptoIdToTickerAndName[id as keyof typeof cryptoIdToTickerAndName].name || '',
@@ -52,6 +52,7 @@ export const fetchCryptoData = createAsyncThunk('cryptoData/fetch', async () => 
         price: data.usd,
         marketCap: data.usd_market_cap,
       };
+      console.log('Market cap: %s', data.usd_market_cap);
     });
   
     return cryptoData;
