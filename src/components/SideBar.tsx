@@ -74,7 +74,7 @@ const SideBar: React.FunctionComponent = () => {
     return (
       <ThemeProvider theme={mdTheme}>
         <CssBaseline enableColorScheme/>
-        <Drawer variant="permanent" open={open}>
+        <Drawer variant="permanent" anchor="left" open={open}>
           <Toolbar
             sx={{
               display: 'flex',

@@ -1,9 +1,13 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect} from "react";
 
 const Portfolio: FunctionComponent = () => {
-
+    useEffect(() => {
+        document.title = 'Portfolio'
+    }, []);
     return (
-        <div>Portfolio</div>
+        <div>
+            <h1>Portfolio</h1>
+        </div>
     );    
 };
     
