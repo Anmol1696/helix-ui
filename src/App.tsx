@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+import AppBar from './components/AppBar'
 import SideBar from './components/SideBar'
 import BuySell from './pages/BuySell';
 import Error from './pages/Error';
@@ -10,6 +11,7 @@ const App: React.FunctionComponent = () => {
   return (
     <>
       <Router>
+        <AppBar />
         <SideBar />
         <Routes>
           <Route
