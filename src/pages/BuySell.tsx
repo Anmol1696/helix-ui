@@ -1,10 +1,15 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect } from "react";
 import CryptoTable from "../components/CryptoTable";
 
 const BuySell: FunctionComponent = () => {
-
+    useEffect(() => {
+        document.title = 'Buy and Sell'
+    }, []);
     return (
-        <CryptoTable />
+        <div>
+            <h1>Buy and Sell</h1>
+            <CryptoTable />
+        </div>
     );    
 };
     
