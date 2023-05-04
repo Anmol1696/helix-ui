@@ -1,3 +1,4 @@
+import  React from "react";
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
@@ -11,8 +12,9 @@ import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import  React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAppSelector, useAppDispatch } from '../app/hooks';
+import { selectToggle, toggle } from '../features/sidebar-toggle/toggleSlice';
 
 const mdTheme = createTheme();
 const drawerWidth: number = 240;
@@ -66,12 +68,9 @@ const mainListItems = (
   </React.Fragment>
 );
 
-const Sidebar: React.FunctionComponent = () => {
-    // Drawer state; open by default
-    const [open, setOpen] = useState(true);
-    const toggleDrawer = () => {
-      setOpen(!open);
-    };
+const SideBar: React.FunctionComponent = () => {
+    const open = useAppSelector(selectToggle);
+    const dispatch = useAppDispatch();
     return (
       <ThemeProvider theme={mdTheme}>
         <CssBaseline enableColorScheme/>
@@ -84,7 +83,7 @@ const Sidebar: React.FunctionComponent = () => {
               px: [1],
             }}
           >
-            <IconButton onClick={toggleDrawer}>
+            <IconButton onClick={() => dispatch(toggle())}>
               <ChevronLeftIcon />
             </IconButton>
           </Toolbar>
@@ -97,4 +96,4 @@ const Sidebar: React.FunctionComponent = () => {
     );
   }
 
-  export default Sidebar;
+  export default SideBar;
