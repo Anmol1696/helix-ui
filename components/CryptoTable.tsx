@@ -70,7 +70,7 @@ const CryptoTable = () => {
   .sort((a, b) => b.marketCap - a.marketCap);
 
   return (
-    <div style={{ height: '100%', width: '100%' }}>
+    <div style={{ height: 'auto', width: 'auto' }}>
       <DataGrid
         autoHeight
         columns={columns}

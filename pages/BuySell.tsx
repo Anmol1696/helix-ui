@@ -7,9 +7,13 @@ const BuySell: NextPage = () => {
         document.title = 'Buy and Sell'
     }, []);
     return (
-        <div>
-            <h1>Buy and Sell</h1>
-            <CryptoTable />
+        <div style={{ margin: '20px 20px 50px 50px'}}>
+            <div style={{ textAlign: 'center'}}>
+                <h1>Cryptocurrency Market Caps</h1>
+            </div>
+            <div>
+                <CryptoTable />
+            </div>
         </div>
     );    
 };
