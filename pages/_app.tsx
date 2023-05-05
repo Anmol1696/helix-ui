@@ -9,7 +9,7 @@ import store from '../store'
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
-      <Layout>
+      <Layout title={'Helix'}>
         <Component {...pageProps} />
       </Layout>
     </Provider>
