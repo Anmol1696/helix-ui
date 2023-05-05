@@ -1138,6 +1138,16 @@
     bowser "2.11.0"
     events "3.3.0"
 
+"@cosmos-kit/core@^1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@cosmos-kit/core/-/core-1.4.1.tgz#fc47189f6969802cdf6d5fda1696bc6c9673d1a7"
+  integrity sha512-CJcuOOKbLZ6CLqYzdyLtze5YIrnNI6UrCQArbE+8+QnF6Z60lavRpjVL0Rz5TbJAJeQ7dBwg+hRugWuNCNWEDw==
+  dependencies:
+    "@chain-registry/types" "0.13.0"
+    "@walletconnect/types" "2.7.2"
+    bowser "2.11.0"
+    events "3.3.0"
+
 "@cosmos-kit/cosmostation-extension@^0.15.12":
   version "0.15.12"
   resolved "https://registry.npmjs.org/@cosmos-kit/cosmostation-extension/-/cosmostation-extension-0.15.12.tgz#3c0003717b7a83eae06aa79b0a7df30e421433b9"
@@ -1202,27 +1212,27 @@
   dependencies:
     "@cosmos-kit/leap-extension" "^0.14.12"
 
-"@cosmos-kit/react-lite@^1.3.11":
-  version "1.3.11"
-  resolved "https://registry.npmjs.org/@cosmos-kit/react-lite/-/react-lite-1.3.11.tgz#1be2a1011ee07d9a4c946a1eeaf35ad1afbc3958"
-  integrity sha512-Sp1AH8iqfEOhavDXThXIfsxJzLH7lk3IHaQC+GPV8A9jQhL/r+iGa1Wt8XafQ89Lza+KhQQmPtpc2DbFmcb8Ng==
+"@cosmos-kit/react-lite@^1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@cosmos-kit/react-lite/-/react-lite-1.4.1.tgz#2bf1693318d3dbe58ec0f5c59077346b8083153e"
+  integrity sha512-jfvMvASfRgmoMjRJ9Co8zT0OO7lkeT9euI9y8T61WapoWCAV7dLHrVc2YamwGQB3i50Qr/RWd9fIeVn64mhUoQ==
   dependencies:
     "@babel/runtime" "7.11.2"
     "@chain-registry/types" "0.13.1"
-    "@cosmos-kit/core" "^1.3.0"
+    "@cosmos-kit/core" "^1.4.1"
     react "18.2.0"
 
-"@cosmos-kit/react@1.3.11":
-  version "1.3.11"
-  resolved "https://registry.npmjs.org/@cosmos-kit/react/-/react-1.3.11.tgz#7aa15018bef90786bede913ec78731ab2ec544c0"
-  integrity sha512-pe9Nn/6N4ZoELZUBiDjcMOQXSzQBLDjmC9C1RBw5B6niJawDkkYxYYC88IKRijRbAFl0TNAOK1smrzk4cPlesA==
+"@cosmos-kit/react@^1.3.21":
+  version "1.3.21"
+  resolved "https://registry.yarnpkg.com/@cosmos-kit/react/-/react-1.3.21.tgz#59cc171f3b11a53762320f43b595aa52625ec974"
+  integrity sha512-sE0Yg0F+U0IZtYMZqmbDKVwwScie02/NIMyCt9SCwQJo9GfZ/9qSkH4/7aiiIFteCd57zHiXwM5NHeRtxhhY7Q==
   dependencies:
     "@babel/runtime" "7.11.2"
     "@chain-registry/types" "0.13.1"
     "@chakra-ui/react" "^2.5.1"
     "@cosmology-ui/react" "^0.1.21"
-    "@cosmos-kit/core" "^1.3.0"
-    "@cosmos-kit/react-lite" "^1.3.11"
+    "@cosmos-kit/core" "^1.4.1"
+    "@cosmos-kit/react-lite" "^1.4.1"
     "@emotion/react" "^11.10.6"
     "@emotion/styled" "^11.10.6"
     framer-motion "^9.0.7"
@@ -2385,6 +2395,15 @@
     ts-node "^10.9.1"
     tslib "1.14.1"
 
+"@walletconnect/heartbeat@1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@walletconnect/heartbeat/-/heartbeat-1.2.1.tgz#afaa3a53232ae182d7c9cff41c1084472d8f32e9"
+  integrity sha512-yVzws616xsDLJxuG/28FqtZ5rzrTA4gUjdEMTbWB5Y8V1XHRmqq4efAxCw5ie7WjbXFSUyBHaWlMR+2/CpQC5Q==
+  dependencies:
+    "@walletconnect/events" "^1.0.1"
+    "@walletconnect/time" "^1.0.2"
+    tslib "1.14.1"
+
 "@walletconnect/jsonrpc-provider@1.0.9":
   version "1.0.9"
   resolved "https://registry.npmmirror.com/@walletconnect/jsonrpc-provider/-/jsonrpc-provider-1.0.9.tgz#ce5ab64dce6a739110aef204ffeedd668ad343d8"
@@ -2519,6 +2538,18 @@
   dependencies:
     "@walletconnect/events" "^1.0.1"
     "@walletconnect/heartbeat" "1.2.0"
+    "@walletconnect/jsonrpc-types" "^1.0.2"
+    "@walletconnect/keyvaluestorage" "^1.0.2"
+    "@walletconnect/logger" "^2.0.1"
+    events "^3.3.0"
+
+"@walletconnect/types@2.7.2":
+  version "2.7.2"
+  resolved "https://registry.yarnpkg.com/@walletconnect/types/-/types-2.7.2.tgz#508d1755110864dee294f955e09b7da3f8ee0064"
+  integrity sha512-1O2UefakZpT0ErRfEAXY7Ls3qdUrKDky/DsK088xR6klyfkQOx+aSVH0fJYLhmnqPTuvp3lrqNbsDc0s6/6nvg==
+  dependencies:
+    "@walletconnect/events" "^1.0.1"
+    "@walletconnect/heartbeat" "1.2.1"
     "@walletconnect/jsonrpc-types" "^1.0.2"
     "@walletconnect/keyvaluestorage" "^1.0.2"
     "@walletconnect/logger" "^2.0.1"
