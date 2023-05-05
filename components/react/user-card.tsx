@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, Stack, Box } from '@chakra-ui/react';
+import { Typography, Stack, Avatar, Box } from '@mui/material';
 import { ConnectedUserCardType } from '../types';
 
 export const ConnectedUserInfo = ({
@@ -12,20 +12,20 @@ export const ConnectedUserInfo = ({
         <>
           <Box
             display={icon ? 'block' : 'none'}
-            minW={20}
-            maxW={20}
-            w={20}
-            minH={20}
-            maxH={20}
-            h={20}
-            borderRadius="full"
-            overflow="hidden"
+            sx={{
+              width: '64px',
+              height: '64px',
+              borderRadius: '50%',
+              overflow: 'hidden',
+            }}
           >
-            {icon}
+            <Avatar src={icon} sx={{ width: '100%', height: '100%' }}>
+              {username.charAt(0).toUpperCase()}
+            </Avatar>
           </Box>
-          <Text fontSize={{ md: 'xl' }} fontWeight="semibold">
+          <Typography variant="subtitle1" fontWeight="bold">
             {username}
-          </Text>
+          </Typography>
         </>
       )}
     </Stack>

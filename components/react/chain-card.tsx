@@ -1,39 +1,47 @@
-import { Box, Stack, useColorModeValue, Image, Text } from '@chakra-ui/react';
+import { Box, Stack, useTheme, Typography } from '@mui/material';
 import { ChainCardProps } from '../types';
 
 export const ChainCard = (props: ChainCardProps) => {
+  const theme = useTheme();
+
   return (
     <Stack
-      isInline={true}
+      direction="row"
       alignItems="center"
-      justifyContent={'center'}
-      spacing={3}
-      overflow="hidden"
-      wordBreak="break-word"
-      color={useColorModeValue('blackAlpha.800', 'whiteAlpha.800')}
-      w="full"
+      spacing={1}
+      sx={{
+        height: theme.spacing(6),
+        backgroundColor: theme.palette.primary.main,
+        borderRadius: theme.spacing(1),
+        overflow: 'hidden',
+        '&:hover': {
+          backgroundColor: theme.palette.action.hover,
+        },
+      }}
     >
       <Box
-        minW={10}
-        minH={10}
-        maxW={10}
-        maxH={10}
-        w="full"
-        h="full"
-        border="1px solid"
-        borderColor={useColorModeValue('blackAlpha.200', 'whiteAlpha.200')}
-        borderRadius="full"
-        overflow="hidden"
+        sx={{
+          width: theme.spacing(5),
+          height: theme.spacing(6),
+          border: '1px solid',
+          borderColor: theme.palette.divider,
+          borderRadius: '50%',
+          overflow: 'hidden',
+          marginRight: '20px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
       >
-        <Image
-          alt=""
+        <img
+          alt={props.prettyName}
           src={props.icon}
-          fallbackSrc={'https://dummyimage.com/150/9e9e9e/ffffff&text=☒'}
+          onError={(e) => {
+            e.currentTarget.src =
+              'https://dummyimage.com/150/9e9e9e/ffffff&text=☒';
+          }}
         />
       </Box>
-      <Text fontSize="xl" fontWeight="semibold" paddingEnd={'18px'}>
-        {props.prettyName}
-      </Text>
     </Stack>
   );
 };

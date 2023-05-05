@@ -4,6 +4,8 @@ import { useRouter } from 'next/router';
 import Box from '@mui/material/Box';
 import AppBar from './AppBar'
 import SideBar from './SideBar'
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 
 type LayoutProps = PropsWithChildren<{
     title: string;
@@ -28,26 +30,29 @@ export default function Layout({ children, title }: LayoutProps) {
       }, [router.events]);
 
     return (
-      <Box sx={{ display: 'flex' }}>
-        <AppBar title={pageTitle}/>
+      <ThemeProvider theme={createTheme()}>
+        <CssBaseline enableColorScheme/>
         <Box sx={{ display: 'flex' }}>
-          <SideBar />
-          <Box
-            component="main"
-            sx={{
-              backgroundColor: (theme) =>
-                theme.palette.mode === 'light'
-                  ? theme.palette.grey[100]
-                  : theme.palette.grey[900],
-              flexGrow: 1,
-              height: '100vh',
-              overflow: 'auto',
-            }}
-          >
-            <Box sx={{ height: '64px' }} /> {/* This box ensures the AppBar stays on top */}
-            {children}
-          </Box>
+            <AppBar title={pageTitle}/>
+            <Box sx={{ display: 'flex' }}>
+            <SideBar />
+            <Box
+                component="main"
+                sx={{
+                backgroundColor: (theme) =>
+                    theme.palette.mode === 'light'
+                    ? theme.palette.grey[100]
+                    : theme.palette.grey[900],
+                flexGrow: 1,
+                height: '100vh',
+                overflow: 'auto',
+                }}
+            >
+                <Box sx={{ height: '64px' }} /> {/* This box ensures the AppBar stays on top */}
+                {children}
+            </Box>
+            </Box>
         </Box>
-      </Box>
+      </ThemeProvider>
     );
   }

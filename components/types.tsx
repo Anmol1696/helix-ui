@@ -29,7 +29,7 @@ export interface ConnectWalletType {
 export interface ConnectedUserCardType {
   walletIcon?: string;
   username?: string;
-  icon?: ReactNode;
+  icon?: string;
 }
 
 export interface FeatureProps {
