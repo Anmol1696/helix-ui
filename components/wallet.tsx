@@ -1,25 +1,14 @@
 import { useChain } from '@cosmos-kit/react';
+import { WalletStatus } from '@cosmos-kit/core';
+import Typography from '@mui/material/Typography';
+import { Box, IconButton, Tooltip } from '@mui/material';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { FaCopy } from 'react-icons/fa';
 import {
-  Box,
-  Center,
-  Grid,
-  GridItem,
-  Icon,
-  Stack,
-  useColorModeValue,
-  Text,
-} from '@chakra-ui/react';
-import { MouseEventHandler } from 'react';
-import { FiAlertTriangle } from 'react-icons/fi';
-import {
-  Astronaut,
   Error,
   Connected,
-  ConnectedShowAddress,
-  ConnectedUserInfo,
   Connecting,
   ConnectStatusWarn,
-  CopyAddressBtn,
   Disconnected,
   NotExist,
   Rejected,
@@ -49,103 +38,59 @@ export const WalletSection = () => {
     icon: logoUrl,
   };
 
-  // Events
-  const onClickConnect: MouseEventHandler = async (e) => {
-    e.preventDefault();
-    await connect();
-  };
-
-  const onClickOpenView: MouseEventHandler = (e) => {
-    e.preventDefault();
-    openView();
-  };
-
-  // Components
   const connectWalletButton = (
     <WalletConnectComponent
       walletStatus={status}
-      disconnect={
-        <Disconnected buttonText="Connect Wallet" onClick={onClickConnect} />
-      }
+      disconnect={<Disconnected buttonText="Connect Wallet" onClick={connect} />}
       connecting={<Connecting />}
-      connected={
-        <Connected buttonText={'My Wallet'} onClick={onClickOpenView} />
-      }
-      rejected={<Rejected buttonText="Reconnect" onClick={onClickConnect} />}
-      error={<Error buttonText="Change Wallet" onClick={onClickOpenView} />}
-      notExist={
-        <NotExist buttonText="Install Wallet" onClick={onClickOpenView} />
-      }
+      connected={<Connected buttonText={username || 'My Wallet'} onClick={openView} />}
+      rejected={<Rejected buttonText="Reconnect" onClick={connect} />}
+      error={<Error buttonText="Change Wallet" onClick={openView} />}
+      notExist={<NotExist buttonText="Install Wallet" onClick={openView} />}
     />
   );
 
   const connectWalletWarn = (
     <ConnectStatusWarn
       walletStatus={status}
-      rejected={
-        <RejectedWarn
-          icon={<Icon as={FiAlertTriangle} mt={1} />}
-          wordOfWarning={`${wallet?.prettyName}: ${message}`}
-        />
-      }
-      error={
-        <RejectedWarn
-          icon={<Icon as={FiAlertTriangle} mt={1} />}
-          wordOfWarning={`${wallet?.prettyName}: ${message}`}
-        />
-      }
+      rejected={<RejectedWarn wordOfWarning={`${wallet?.prettyName}: ${message}`} />}
+      error={<RejectedWarn wordOfWarning={`${wallet?.prettyName}: ${message}`} />}
     />
   );
 
-  const userInfo = username && (
-    <ConnectedUserInfo username={username} icon={<Astronaut />} />
-  );
-  const addressBtn = (
-    <CopyAddressBtn
-      walletStatus={status}
-      connected={<ConnectedShowAddress address={address} isLoading={false} />}
-    />
+  const addressBtn = address && (
+    <CopyToClipboard text={address}>
+      <Tooltip title="Copy address">
+        <Box display="flex" alignItems="center">
+          <Typography variant="body2" noWrap>
+            {`${address.substring(0, 8)}...${address.substring(address.length - 4)}`}
+          </Typography>
+          <Box ml={1}>
+            <IconButton>
+              <FaCopy />
+            </IconButton>
+          </Box>
+        </Box>
+      </Tooltip>
+    </CopyToClipboard>
   );
 
   return (
-    <Center py={16}>
-      <Grid
-        w="full"
-        maxW="sm"
-        templateColumns="1fr"
-        rowGap={4}
-        alignItems="center"
-        justifyContent="center"
-      >
-        <GridItem marginBottom={'20px'}>
-          <ChainCard
-            prettyName={chain?.label || chainName}
-            icon={chain?.icon}
-          />
-        </GridItem>
-        <GridItem px={6}>
-          <Stack
-            justifyContent="center"
-            alignItems="center"
-            borderRadius="lg"
-            bg={useColorModeValue('white', 'blackAlpha.400')}
-            boxShadow={useColorModeValue(
-              '0 0 2px #dfdfdf, 0 0 6px -2px #d3d3d3',
-              '0 0 2px #363636, 0 0 8px -2px #4f4f4f'
-            )}
-            spacing={4}
-            px={4}
-            py={{ base: 6, md: 12 }}
-          >
-            {userInfo}
+    <Box display="flex" alignItems="center" justifyContent="space-between">
+      {status === WalletStatus.Connected && (
+        <Box display="flex" alignItems="center">
+          <ChainCard prettyName={chain?.label || chainName} icon={chain?.icon} />
+        </Box>
+      )}
+      <Box display="flex" alignItems="center">
+        {status === WalletStatus.Connected && (
+          <Box ml={2} mr={3}>
             {addressBtn}
-            <Box w="full" maxW={{ base: 52, md: 64 }}>
-              {connectWalletButton}
-            </Box>
-            {connectWalletWarn && <GridItem>{connectWalletWarn}</GridItem>}
-          </Stack>
-        </GridItem>
-      </Grid>
-    </Center>
+          </Box>
+        )}
+        <Box>{connectWalletButton}</Box>
+      </Box>
+      {connectWalletWarn}
+    </Box>
   );
 };

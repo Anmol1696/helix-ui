@@ -1,50 +1,48 @@
 import React, { MouseEventHandler, ReactNode } from 'react';
-import { Button, Icon, Stack, Text, useColorModeValue } from '@chakra-ui/react';
+import {
+  Button,
+  Icon,
+  Typography,
+  useTheme,
+  Stack,
+} from '@mui/material';
 import { IoWallet } from 'react-icons/io5';
-import { ConnectWalletType } from '../types';
-import { FiAlertTriangle } from 'react-icons/fi';
 import { WalletStatus } from '@cosmos-kit/core';
+import { useStyles } from './wallet-connect.styles';
 
 export const ConnectWalletButton = ({
   buttonText,
   isLoading,
   isDisabled,
   icon,
-  onClickConnectBtn
-}: ConnectWalletType) => {
+  onClickConnectBtn,
+}: {
+  buttonText?: string;
+  isLoading?: boolean;
+  isDisabled?: boolean;
+  icon?: ReactNode;
+  onClickConnectBtn?: MouseEventHandler<HTMLButtonElement>;
+}) => {
+  const theme = useTheme();
+  const classes = useStyles(theme);
+
   return (
     <Button
-      w="full"
-      minW="fit-content"
-      size="lg"
-      isLoading={isLoading}
-      isDisabled={isDisabled}
-      bgImage="linear-gradient(109.6deg, rgba(157,75,199,1) 11.2%, rgba(119,81,204,1) 83.1%)"
-      color="white"
-      opacity={1}
-      transition="all .5s ease-in-out"
-      _hover={{
-        bgImage:
-          'linear-gradient(109.6deg, rgba(157,75,199,1) 11.2%, rgba(119,81,204,1) 83.1%)',
-        opacity: 0.75
-      }}
-      _active={{
-        bgImage:
-          'linear-gradient(109.6deg, rgba(157,75,199,1) 11.2%, rgba(119,81,204,1) 83.1%)',
-        opacity: 0.9
-      }}
+      fullWidth
+      size="large"
+      disabled={isDisabled}
+      variant="contained"
+      color="primary"
+      className={classes.button}
       onClick={onClickConnectBtn}
+      startIcon={<Icon className={classes.icon}>{icon ? icon : <IoWallet />}</Icon>}
     >
-      <Icon as={icon ? icon : IoWallet} mr={2} />
       {buttonText ? buttonText : 'Connect Wallet'}
     </Button>
   );
 };
 
-export const Disconnected = ({
-  buttonText,
-  onClick
-}: {
+export const Disconnected = ({ buttonText, onClick }: {
   buttonText: string;
   onClick: MouseEventHandler<HTMLButtonElement>;
 }) => {
@@ -53,10 +51,7 @@ export const Disconnected = ({
   );
 };
 
-export const Connected = ({
-  buttonText,
-  onClick
-}: {
+export const Connected = ({ buttonText, onClick }: {
   buttonText: string;
   onClick: MouseEventHandler<HTMLButtonElement>;
 }) => {
@@ -66,19 +61,20 @@ export const Connected = ({
 };
 
 export const Connecting = () => {
-  return <ConnectWalletButton isLoading={true} />;
+  return <ConnectWalletButton isLoading />;
 };
 
 export const Rejected = ({
   buttonText,
   wordOfWarning,
-  onClick
+  onClick,
 }: {
   buttonText: string;
   wordOfWarning?: string;
   onClick: MouseEventHandler<HTMLButtonElement>;
 }) => {
-  const bg = useColorModeValue('orange.200', 'orange.300');
+  const theme = useTheme();
+  const bg = theme.palette.warning.light;
 
   return (
     <Stack>
@@ -89,36 +85,36 @@ export const Rejected = ({
       />
       {wordOfWarning && (
         <Stack
-          isInline={true}
+          direction="row"
+          alignItems="center"
           borderRadius="md"
-          bg={bg}
-          color="blackAlpha.900"
-          p={4}
-          spacing={1}
+          bgcolor={bg}
+          color="text.primary"
+          p={2}
         >
-          <Icon as={FiAlertTriangle} mt={1} />
-          <Text>
-            <Text fontWeight="semibold" as="span">
-              Warning:&ensp;
-            </Text>
+          <Typography variant="body1">
+            <strong>Warning:&ensp;</strong>
             {wordOfWarning}
-          </Text>
+          </Typography>
         </Stack>
       )}
     </Stack>
   );
 };
 
+type ErrorProps = {
+  buttonText: string;
+  wordOfWarning?: string;
+  onClick: MouseEventHandler<HTMLButtonElement>;
+};
+
 export const Error = ({
   buttonText,
   wordOfWarning,
   onClick
-}: {
-  buttonText: string;
-  wordOfWarning?: string;
-  onClick: MouseEventHandler<HTMLButtonElement>;
-}) => {
-  const bg = useColorModeValue('orange.200', 'orange.300');
+}: ErrorProps) => {
+  const theme = useTheme();
+  const bg = theme.palette.error.dark;
 
   return (
     <Stack>
@@ -129,20 +125,17 @@ export const Error = ({
       />
       {wordOfWarning && (
         <Stack
-          isInline={true}
+          direction="row"
           borderRadius="md"
-          bg={bg}
+          bgcolor={bg}
           color="blackAlpha.900"
           p={4}
           spacing={1}
         >
-          <Icon as={FiAlertTriangle} mt={1} />
-          <Text>
-            <Text fontWeight="semibold" as="span">
-              Warning:&ensp;
-            </Text>
+          <Typography variant="body1">
+            <strong>Warning:&ensp;</strong>
             {wordOfWarning}
-          </Text>
+          </Typography>
         </Stack>
       )}
     </Stack>

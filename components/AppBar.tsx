@@ -2,10 +2,10 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import Badge from '@mui/material/Badge';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import { Box } from '@mui/material';
+import { WalletSection } from '../components';
 
 import { useAppSelector, useAppDispatch } from '../hooks';
 import { selectToggle, toggle } from '../features/sidebar-toggle/toggleSlice';
@@ -49,11 +49,8 @@ const AppBar: React.FunctionComponent<AppBarProps> = ({ title }) => {
           >
             {title}
           </Typography>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
+          <Box flexGrow={1} />
+          <WalletSection />
         </Toolbar>
       </TopBar>
     </ThemeProvider>
