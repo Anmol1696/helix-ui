@@ -1,21 +1,41 @@
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Box } from '@mui/material';
 import { WalletSection } from '../components';
 
 import { useAppSelector, useAppDispatch } from '../hooks';
 import { selectToggle, toggle } from '../features/sidebar-toggle/toggleSlice';
-import { TopBar } from './AppBar.styles';
 
-type AppBarProps = {
-  title: string;
-};
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 
-const AppBar: React.FunctionComponent<AppBarProps> = ({ title }) => {
+interface TopBarProps extends MuiAppBarProps {
+    open?: boolean;
+  }
+  
+  const drawerWidth: number = 240;
+  
+  export const TopBar = styled(MuiAppBar, {
+    shouldForwardProp: (prop) => prop !== 'open',
+  })<TopBarProps>(({ theme, open }) => ({
+    zIndex: theme.zIndex.drawer + 1,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    ...(open && {
+      marginLeft: drawerWidth,
+      width: `calc(100% - ${drawerWidth}px)`,
+      transition: theme.transitions.create(['width', 'margin'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    }),
+  }));
+
+const AppBar: React.FunctionComponent = () => {
   const open = useAppSelector(selectToggle);
   const dispatch = useAppDispatch();
   
@@ -40,15 +60,6 @@ const AppBar: React.FunctionComponent<AppBarProps> = ({ title }) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography
-            component="h1"
-            variant="h6"
-            color="inherit"
-            noWrap
-            sx={{ flexGrow: 1 }}
-          >
-            {title}
-          </Typography>
           <Box flexGrow={1} />
           <WalletSection />
         </Toolbar>
