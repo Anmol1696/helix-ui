@@ -33,7 +33,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         wrappedWithChakra={true}
       >
         <Provider store={store}>
-          <Layout title={'Helix'}>
+          <Layout>
             <Component {...pageProps} />
           </Layout>
         </Provider>
