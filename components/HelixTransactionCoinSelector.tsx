@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -10,8 +10,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { RootState } from '../store';
-import {useAppSelector, useAppDispatch} from '../hooks';
-import {selectHelixFund} from "../features/wallet-data/walletDataSlice";
+import { useAppSelector, useAppDispatch } from '../hooks';
+import { fetchCryptoData } from '../features/crypto-data/cryptoDataSlice';
+import { selectHelixFund } from "../features/wallet-data/walletDataSlice";
 
 function createData(
   token: string,
@@ -22,36 +23,30 @@ function createData(
   return { token, currentWeight, targetWeight, fees };
 }
 
-// @Maaj please refactor this to take real data from a slice
-const rows = [
-  createData("BTC", 0.447, 0.44, 0.025),
-  createData("ETH", 0.212, 0.215, 0.1),
-  createData("ATOM", 0.212, 0.215, 0.2),
-  createData("BNB", 0.212, 0.215, 0.0),
-  createData("OSMO", 0.212, 0.215, 0.5),
-  createData("MATIC", 0.212, 0.215, 0.3),
-  createData("AVAX", 0.212, 0.215, 0.2),
-];
-
 const CoinSelector = () => {
   const dispatch = useAppDispatch();
 
   const handleChange = (event: SelectChangeEvent) => {
     dispatch(selectHelixFund(event.target.value as string));
   };
+  
+  useEffect(() => {
+    dispatch(fetchCryptoData());
+  }, [dispatch]);
+  
+  const { value } = useAppSelector((state: RootState) => state.buySellState);
+  const { etfs, selectedHelixFund } = useAppSelector((state: RootState) => state.walletCryptoData);
+  const selectedETF = etfs[selectedHelixFund];
+  
+  const rows = Object.entries(selectedETF?.tokens || {}).map(([ticker, token]) =>
+    createData(ticker, token.currentWeight, token.targetWeight, token.buyFee + token.sellFee)
+  );
 
-   const { value } = useAppSelector((state: RootState) => state.buySellState);
-   const { walletData, selectedHelixFund } = useAppSelector((state: RootState) => state.walletCryptoData);
-
-
-   const helixFundMenuItems = Object.entries(walletData).map((id, data) => {
-        const walletData = id[1];
-        return (
-            <MenuItem value={walletData.ticker} key={walletData.ticker}>
-                 {walletData.displayName}
-            </MenuItem>
-        )
-    });
+  const helixFundMenuItems = Object.entries(etfs).map(([ticker, etf]) => (
+    <MenuItem value={ticker} key={ticker}>
+      {etf.name}
+    </MenuItem>
+  ));
 
   return (
     <div>

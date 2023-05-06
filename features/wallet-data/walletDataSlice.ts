@@ -1,71 +1,124 @@
-import {createSlice} from '@reduxjs/toolkit';
-import { HYDRATE } from "next-redux-wrapper";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { HYDRATE } from 'next-redux-wrapper';
 
-interface WalletData {
-    displayName: string;
+interface TokenData {
     ticker: string;
+    targetWeight: number;
     price: number;
-    sevenDayGrowth: number;
-    inWallet: number;
-    balanceInUSD: number;
+    currentWeight: number;
+    buyFee: number;
+    sellFee: number;
+  }
+
+interface ETFData {
+    ticker: string;
+    name: string;
     description: string;
+    tokens: { [id: string]: TokenData };
+    inWallet: number;
 }
 
 interface WalletCryptoData {
-    [id: string]: WalletData;
-}
-
-interface WalletCryptoState {
-    walletData: WalletCryptoData;
     selectedHelixFund: string;
+    etfs: { [ticker: string]: ETFData };
     isLoading: boolean;
     error: string | null;
 }
 
-
-const initialState: WalletCryptoState = {
-    walletData: {
-        'HTM': {
-            displayName: 'Helix Total Market (HTM)',
-            ticker: 'HTM',
-            price: 1.07,
-            sevenDayGrowth: 1.7,
-            inWallet: 932.71,
-            balanceInUSD: 998,
-            description: 'Helix Total Market (HTM) provides exposure to the entire cryptocurrency market.'
-        },
-        'HDM': {
-            displayName: 'Helix Degen Market (HDM)',
-            ticker: 'HDM',
-            price: -26.8,
-            sevenDayGrowth: -1.7,
-            inWallet: 1,
-            balanceInUSD: -26.8,
-            description: 'Helix Degen Market (HDM) provides exposure to the degen meme coin market.'
-        }
-    },
+const initialState: WalletCryptoData = {
     selectedHelixFund: 'HTM',
+    etfs: {
+        HTM: {
+            ticker: 'HTM',
+            name: 'Helix Total Market',
+            description: 'Helix Total Market (HTM) provides exposure to the entire cryptocurrency market.',
+            tokens: {
+            BTC: { ticker: 'BTC', targetWeight: 0.35, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
+            ETH: { ticker: 'ETH', targetWeight: 0.15, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
+            BNB: { ticker: 'BNB', targetWeight: 0.05, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
+            AVAX: { ticker: 'AVAX', targetWeight: 0.05, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
+            MATIC: { ticker: 'MATIC', targetWeight: 0.05, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
+            ATOM: { ticker: 'ATOM', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
+            OSMO: { ticker: 'OSMO', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
+            CRO: { ticker: 'CRO', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
+            INJ: { ticker: 'INJ', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
+            KAVA: { ticker: 'KAVA', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
+            DOT: { ticker: 'DOT', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
+            FTM: { ticker: 'FTM', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
+            },
+            inWallet: 0,
+        },
+        HDM: {
+            ticker: 'HDM',
+            name: 'Helix Degen Market',
+            description: 'Helix Degen Market (HDM) provides exposure to the degen meme coin market.',
+            tokens: {
+            ATOM: { ticker: 'ATOM', targetWeight: 0.25, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
+            OSMO: { ticker: 'OSMO', targetWeight: 0.25, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
+            INJ: { ticker: 'INJ', targetWeight: 0.25, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
+            KAVA: { ticker: 'KAVA', targetWeight: 0.25, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },  
+            },
+            inWallet: 0,
+            },
+        },
     isLoading: false,
     error: null,
 };
 
 const walletDataSlice = createSlice({
-name: 'walletCryptoData',
-initialState,
-reducers: {
-    [HYDRATE]: (state, action) => {
+    name: 'walletCryptoData',
+    initialState,
+    reducers: {
+      [HYDRATE]: (state, action) => {
         return {
-            ...state,
-            ...action.payload,
+          ...state,
+          ...action.payload,
         };
-    },
-    selectHelixFund: (state, action) => {
+      },
+      selectHelixFund: (state, action: PayloadAction<string>) => {
         state.selectedHelixFund = action.payload;
-    }
-},
-
-});
-
-export const {selectHelixFund} = walletDataSlice.actions;
-
-export default walletDataSlice.reducer;
+      },
+      updateTokenData: (
+        state,
+        action: PayloadAction<{ etfTicker: string; ticker: string; data: Partial<TokenData> }>
+      ) => {
+        const { etfTicker, ticker, data } = action.payload;
+        const etf = state.etfs[etfTicker];
+        if (etf) {
+          const token = Object.values(etf.tokens).find((t) => t.ticker === ticker);
+          if (token) {
+            Object.assign(token, data);
+          }
+        }
+      },
+      updateFeeData: (
+        state,
+        action: PayloadAction<{ etfTicker: string; ticker: string; buyFee: number; sellFee: number }>
+      ) => {
+        const { etfTicker, ticker, buyFee, sellFee } = action.payload;
+        const etf = state.etfs[etfTicker];
+        if (etf) {
+          const token = Object.values(etf.tokens).find((t) => t.ticker === ticker);
+          if (token) {
+            token.buyFee = buyFee;
+            token.sellFee = sellFee;
+          }
+        }
+      },
+      updateWalletTokenQuantity: (
+        state,
+        action: PayloadAction<{ etfTicker: string; quantity: number }>
+      ) => {
+        const { etfTicker, quantity } = action.payload;
+        const etf = state.etfs[etfTicker];
+        if (etf) {
+          etf.inWallet = quantity;
+        }
+      },
+    },
+  });
+  
+  export const { selectHelixFund, updateTokenData, updateFeeData, updateWalletTokenQuantity } =
+    walletDataSlice.actions;
+  
+  export default walletDataSlice.reducer;

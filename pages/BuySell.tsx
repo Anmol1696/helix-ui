@@ -13,7 +13,7 @@ import {selectHelixFund} from "../features/wallet-data/walletDataSlice";
 
 const BuySell: NextPage = () => {
     const dispatch = useAppDispatch();
-    const { walletData, selectedHelixFund } = useAppSelector((state: RootState) => state.walletCryptoData);
+    const { etfs, selectedHelixFund } = useAppSelector((state: RootState) => state.walletCryptoData);
 
     useEffect(() => {
         document.title = 'Buy and Sell'
@@ -47,14 +47,11 @@ const BuySell: NextPage = () => {
         p: 4,
     };
 
-    const helixFundMenuItems = Object.entries(walletData).map((id, data) => {
-        const walletData = id[1];
-        return (
-            <MenuItem value={walletData.ticker} key={walletData.ticker}>
-                 {walletData.displayName}
-            </MenuItem>
-        )
-    });
+    const helixFundMenuItems = Object.entries(etfs).map(([ticker, etf]) => (
+        <MenuItem value={ticker} key={ticker}>
+          {etf.name}
+        </MenuItem>
+      ));
 
     return (
         <>
