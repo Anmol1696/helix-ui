@@ -3,7 +3,14 @@ import { alpha, styled } from '@mui/material/styles';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { RootState } from '../store';
 import { fetchCryptoData } from '../features/crypto-data/cryptoDataSlice';
-import { DataGrid, gridClasses, GridColDef, GridRowClassNameParams, GridValueFormatterParams} from '@mui/x-data-grid';
+import { 
+  DataGrid,
+  gridClasses,
+  GridColDef,
+  GridRowClassNameParams,
+  GridValueGetterParams,
+  GridValueFormatterParams
+} from '@mui/x-data-grid';
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
@@ -59,6 +66,18 @@ const CryptoTable = () => {
   const totalMarketCap = Object.values(cryptoData).reduce((acc, { marketCap }) => acc + marketCap, 0);
 
   const columns: GridColDef[] = [
+    {
+      field: 'icon',
+      headerName: '',
+      align: 'center',
+      headerAlign: 'center',
+      sortable: false,
+      renderCell: (params) => (
+        <img src={`/${params.row.ticker.toLowerCase()}.svg`} alt={params.row.ticker} width={24} height={24} />
+      ),
+      minWidth: 24,
+      headerClassName: 'custom-header',
+    },
     { 
       field: 'name',
       headerName: 'Name',
@@ -130,6 +149,7 @@ const CryptoTable = () => {
   const rows = Object.entries(cryptoData)
     .map(([id, data]) => ({
       id,
+      icon: data.ticker.toLowerCase(),
       name: data.name,
       ticker: data.ticker,
       price: data.price,
