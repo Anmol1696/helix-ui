@@ -10,7 +10,7 @@ const HelixTransactionModal: NextPage = () => {
     const { value } = useAppSelector((state: RootState) => state.buySellState);
 
     const { etfs, selectedHelixFund } = useAppSelector((state: RootState) => state.walletCryptoData);
-    const selecdHelixFundData = etfs[selectedHelixFund];
+    const selectedHelixFundData = etfs[selectedHelixFund];
 
     return (
        <div>
@@ -22,7 +22,7 @@ const HelixTransactionModal: NextPage = () => {
           alignItems: "center",
         }}
       >
-        <h1>{value === "buy" ? "Buy" : "Sell"} {selecdHelixFundData.name}</h1>
+        <h1>{value === "buy" ? "Buy" : "Sell"} {selectedHelixFundData.name}</h1>
       </Box>
       <Grid container spacing={6} p={3}>
         <Grid item xs={6}>
