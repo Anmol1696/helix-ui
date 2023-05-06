@@ -2,11 +2,13 @@
   "name": "@cosmology/connect-chain",
   "version": "0.15.0",
   "private": true,
+  "license": "MIT license",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "export": "next export"
   },
   "dependencies": {
     "@chakra-ui/icons": "2.0.12",
@@ -38,6 +40,7 @@
   "devDependencies": {
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",
+    "@types/react-copy-to-clipboard": "^5.0.4",
     "@types/react-dom": "18.0.9",
     "eslint": "8.28.0",
     "eslint-config-next": "13.0.5",
