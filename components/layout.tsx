@@ -32,7 +32,7 @@ export default function Layout({ children, title }: LayoutProps) {
     return (
       <ThemeProvider theme={createTheme()}>
         <CssBaseline enableColorScheme/>
-        <Box sx={{ display: 'flex' }}>
+        <Box>
             <AppBar title={pageTitle}/>
             <Box sx={{ display: 'flex' }}>
             <SideBar />
