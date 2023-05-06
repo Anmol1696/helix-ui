@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from "react";
+import React, { useEffect} from "react";
 import type { NextPage } from 'next'
 import {Box, Button, Grid, Typography, MenuItem, FormControl, Modal} from "@mui/material";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
@@ -59,7 +59,7 @@ const BuySell: NextPage = () => {
     return (
         <>
             <Grid container mt={2}>
-                <Grid item xs={6}>
+                <Grid item xs={12}>
                     <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                         <Typography variant="h4">Buy and Sell Helix Funds</Typography>
                         <FormControl sx={{width: '80%', mt: 3}}>
@@ -91,18 +91,18 @@ const BuySell: NextPage = () => {
                         <Button variant="contained" sx={{backgroundColor: "#d93f4e"}} onClick={handleSellModalOpen}>Sell HTM</Button>
                     </Box>
                 </Grid>
-                <Grid item xs={6}>
+            </Grid>
+            <Grid container mt={2}>
+                <Grid item xs={12}>
                     <div style={{ margin: '20px 20px 50px 50px'}}>
-                        <div style={{ textAlign: 'center'}}>
-                            <h1>Cryptocurrency Market Caps</h1>
+                        <div style={{ margin: '0px 0px 25px 0px', textAlign: 'center'}}>
+                            <Typography variant="h5">Cryptocurrency Market Caps</Typography>
                         </div>
                         <div>
                             <CryptoTable />
                         </div>
                     </div>
-                    
                 </Grid>
-
             </Grid>
         </>
     );    

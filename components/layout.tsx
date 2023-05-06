@@ -1,39 +1,17 @@
-import { PropsWithChildren, useEffect, useState} from 'react';
-
-import { useRouter } from 'next/router';
+import { PropsWithChildren } from 'react';
 import Box from '@mui/material/Box';
 import AppBar from './AppBar'
 import SideBar from './SideBar'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 
-type LayoutProps = PropsWithChildren<{
-    title: string;
-}>;
-
-export default function Layout({ children, title }: LayoutProps) {
-    const router = useRouter();
-    const [pageTitle, setPageTitle] = useState(title);
-
-    useEffect(() => {
-        const handleRouteChange = (url: string) => {
-          // Extract the page name from the URL
-          let pageTitle = url.split('/').pop() || '';
-          pageTitle = pageTitle ? pageTitle : 'Helix';
-          setPageTitle(pageTitle);
-          document.title = pageTitle;
-        };
-        router.events.on('routeChangeComplete', handleRouteChange);
-        return () => {
-          router.events.off('routeChangeComplete', handleRouteChange);
-        };
-      }, [router.events]);
+export default function Layout({ children }: PropsWithChildren) {
 
     return (
       <ThemeProvider theme={createTheme()}>
         <CssBaseline enableColorScheme/>
         <Box>
-            <AppBar title={pageTitle}/>
+            <AppBar/>
             <Box sx={{ display: 'flex' }}>
             <SideBar />
             <Box
