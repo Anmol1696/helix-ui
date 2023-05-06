@@ -1,5 +1,6 @@
 import { Box, Stack, useTheme, Typography } from '@mui/material';
 import { ChainCardProps } from '../types';
+import Image from 'next/image';
 
 export const ChainCard = (props: ChainCardProps) => {
   const theme = useTheme();
@@ -33,13 +34,16 @@ export const ChainCard = (props: ChainCardProps) => {
           justifyContent: 'center',
         }}
       >
-        <img
+        <Image
           alt={props.prettyName}
-          src={props.icon}
+          src={props.icon || 'https://dummyimage.com/150/9e9e9e/ffffff&text=☒'}
           onError={(e) => {
             e.currentTarget.src =
               'https://dummyimage.com/150/9e9e9e/ffffff&text=☒';
-          }}
+            }
+          }
+          width={theme.spacing(5)}
+          height={theme.spacing(5)}
         />
       </Box>
     </Stack>

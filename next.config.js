@@ -6,4 +6,7 @@ module.exports = {
   basePath: basePath,
   reactStrictMode: true,
   swcMinify: true,
+  images: {
+    domains: ['raw.githubusercontent.com'],
+  },
 }

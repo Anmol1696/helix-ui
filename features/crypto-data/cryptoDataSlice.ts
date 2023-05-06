@@ -46,7 +46,6 @@ export const fetchCryptoData = createAsyncThunk('cryptoData/fetch', async () => 
     const response = await axios.get<{ [key: string]: { usd: number; usd_market_cap: number } }>(url);
 
     const cryptoData: CryptoData = {};
-    console.log('test');
     Object.entries(response.data).forEach(([id, data]) => {
       cryptoData[id] = {
         name: cryptoIdToTickerAndName[id as keyof typeof cryptoIdToTickerAndName].name || '',
@@ -54,7 +53,6 @@ export const fetchCryptoData = createAsyncThunk('cryptoData/fetch', async () => 
         price: data.usd,
         marketCap: data.usd_market_cap,
       };
-      console.log('Market cap: %s', data.usd_market_cap);
     });
   
     return cryptoData;

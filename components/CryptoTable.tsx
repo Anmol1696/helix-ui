@@ -8,9 +8,9 @@ import {
   gridClasses,
   GridColDef,
   GridRowClassNameParams,
-  GridValueGetterParams,
   GridValueFormatterParams
 } from '@mui/x-data-grid';
+import Image from 'next/image';
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
@@ -73,7 +73,7 @@ const CryptoTable = () => {
       headerAlign: 'center',
       sortable: false,
       renderCell: (params) => (
-        <img src={`/${params.row.ticker.toLowerCase()}.svg`} alt={params.row.ticker} width={24} height={24} />
+        <Image src={`/${params.row.ticker.toLowerCase()}.svg`} alt={params.row.ticker} width={24} height={24} />
       ),
       minWidth: 24,
       headerClassName: 'custom-header',
