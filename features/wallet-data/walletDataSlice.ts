@@ -151,6 +151,7 @@ const walletDataSlice = createSlice({
       if (etf) {
         etf.inWallet = quantity;
       }
+      state.tokensInWallet[etfTicker] = quantity;
       state.etfs[etfTicker] = etf;
     },
     updateTokenQuantityInWallet: (
