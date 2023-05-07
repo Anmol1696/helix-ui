@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import Image from "next/image";
 import { alpha } from '@mui/material/styles';
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -10,7 +11,6 @@ import { RootState } from '../store';
 import { useAppSelector, useAppDispatch } from '../hooks';
 import { fetchCryptoData } from '../features/crypto-data/cryptoDataSlice';
 import { selectToken } from '../features/wallet-data/walletDataSlice';
-import Image from "next/image";
 
 function createData(
   token: string,
@@ -23,13 +23,13 @@ function createData(
 
 const CoinSelector = () => {
   const dispatch = useAppDispatch();
-
+  
+  const { etfs, selectedHelixFund, selectedToken} = useAppSelector((state: RootState) => state.walletCryptoData);
+  const selectedETF = etfs[selectedHelixFund];
   useEffect(() => {
     dispatch(fetchCryptoData());
+    dispatch(selectToken(selectedToken.ticker))
   }, [dispatch]);
-  
-  const { etfs, selectedHelixFund } = useAppSelector((state: RootState) => state.walletCryptoData);
-  const selectedETF = etfs[selectedHelixFund];
   
   const rows = Object.entries(selectedETF?.tokens || {}).map(([ticker, token]) =>
     createData(ticker, token.currentWeight, token.targetWeight, token.buyFee + token.sellFee)

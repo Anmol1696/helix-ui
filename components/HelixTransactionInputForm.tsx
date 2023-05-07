@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
@@ -5,13 +6,71 @@ import TextField from "@mui/material/TextField";
 
 import {switchBuySell } from "../features/wallet-data/buySellSlice";
 import { RootState } from '../store';
+import { updateWalletTokenQuantity } from '../features/wallet-data/walletDataSlice';
+import { buyETF, sellETF } from "../features/exchange-data/exchangeDataSlice";
+
 
 const InputForm = () => {
   const { buySell: value } = useAppSelector((state: RootState) => state.buySellState);
   const { buttonColor } = useAppSelector((state: RootState) => state.buySellState);
   const { buttonHighlightColor } = useAppSelector((state: RootState) => state.buySellState);
+  const { selectedHelixFund } = useAppSelector((state: RootState) => state.walletCryptoData);
+  const { selectedToken } = useAppSelector((state: RootState) => state.walletCryptoData);
+  const [payAmount, setPayAmount] = useState<number>(0);
+  const [receiveAmount, setReceiveAmount] = useState<number>(0);
 
   const dispatch = useAppDispatch();
+
+  const handlePayAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const amount = parseFloat(event.target.value);
+    setPayAmount(amount);
+    setReceiveAmount(0);
+  };
+
+  const handleReceiveAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const amount = parseFloat(event.target.value);
+    setReceiveAmount(amount);
+    setPayAmount(0);
+  };
+
+  const handleBuySell = () => {
+    if (selectedToken) {
+      const { ticker, buyFee, sellFee } = selectedToken;
+      const quantity = value === "buy" ? receiveAmount! : payAmount!;
+      const fee = value === "buy" ? buyFee : sellFee;
+      const price = selectedToken.price;
+      const totalPrice = quantity * price;
+      const feeAmount = quantity * fee;
+  
+      // Update wallet token quantity
+      dispatch(updateWalletTokenQuantity({ etfTicker: selectedHelixFund, quantity }));
+  
+      if (value === "buy") {
+        // Perform buy action
+        dispatch(buyETF({
+          ticker: selectedHelixFund,
+          tokenTicker: ticker,
+          amount: quantity,
+          tokenPrice: price,
+          fee: feeAmount,
+        }));
+      } else {
+        // Perform sell action
+        dispatch(sellETF({
+          ticker: selectedHelixFund,
+          tokenTicker: ticker,
+          amount: quantity,
+          tokenPrice: price,
+          fee: feeAmount,
+        }));
+      }
+  
+      // Reset input fields
+      setPayAmount(0);
+      setReceiveAmount(0);
+    }
+  };
+  
   return (
     <div>
       <Box
@@ -72,6 +131,8 @@ const InputForm = () => {
               height: "50px",
             },
           }}
+          value={payAmount || ''}
+          onChange={handlePayAmountChange}
         />
         <TextField
           id="filled-basic"
@@ -82,6 +143,8 @@ const InputForm = () => {
               height: "50px",
             },
           }}
+          value={receiveAmount || ''}
+          onChange={handleReceiveAmountChange}
         />
         <TextField
           id="filled-basic"
@@ -105,6 +168,7 @@ const InputForm = () => {
             background: buttonHighlightColor,
           },
         }}
+        onClick={handleBuySell}
       >
         {value === "buy" ? "buy" : "sell"}
       </Button>
