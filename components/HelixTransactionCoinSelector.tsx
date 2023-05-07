@@ -9,6 +9,7 @@ import { RootState } from '../store';
 import { useAppSelector, useAppDispatch } from '../hooks';
 import { fetchCryptoData } from '../features/crypto-data/cryptoDataSlice';
 import { selectToken } from '../features/wallet-data/walletDataSlice';
+import Image from "next/image";
 
 function createData(
   token: string,
@@ -62,6 +63,12 @@ const CoinSelector = () => {
     };
   };
 
+  const iconCellStyle = {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+  };
+
   return (
     <div>
       <TableContainer 
@@ -84,7 +91,10 @@ const CoinSelector = () => {
                 onClick={() => handleTokenSelect(row.token)}
               >
                 <TableCell component="th" scope="row" sx={getRowStyle(row.token)}>
-                  {row.token}
+                  <div style={iconCellStyle} >
+                    <Image src={`/${row.token.toLowerCase()}.svg`} alt={row.token} width={24} height={24} />
+                    <span>{row.token}</span>
+                  </div>
                 </TableCell>
                 <TableCell align="right" sx={getRowStyle(row.token)}>{row.currentWeight} </TableCell>
                 <TableCell align="right" sx={getRowStyle(row.token)}>{row.targetWeight}</TableCell>
