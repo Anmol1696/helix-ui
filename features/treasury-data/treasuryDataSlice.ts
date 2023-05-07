@@ -14,11 +14,11 @@ interface ETFData {
   tokens: { [ticker: string]: TokenData };
 }
 
-interface ExchangeDataState {
+interface TreasuryDataState {
   ETFs: { [ticker: string] : ETFData };
 }
 
-const initialState: ExchangeDataState = {
+const initialState: TreasuryDataState = {
   ETFs: {
     'HTM': {
         nav: 0,
@@ -39,8 +39,8 @@ const calculateFee = (amount: number, feePercentage: number) => {
   return amount * (feePercentage / 100);
 };
 
-const exchangeDataSlice = createSlice({
-  name: 'exchangeData',
+const treasuryDataSlice = createSlice({
+  name: 'treasuryData',
   initialState,
   reducers: {
     buyETF: (
@@ -103,6 +103,6 @@ const exchangeDataSlice = createSlice({
   },
 });
 
-export const { buyETF, sellETF } = exchangeDataSlice.actions;
+export const { buyETF, sellETF } = treasuryDataSlice.actions;
 
-export default exchangeDataSlice.reducer;
+export default treasuryDataSlice.reducer;

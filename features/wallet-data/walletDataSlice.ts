@@ -25,6 +25,7 @@ interface WalletCryptoData {
   etfs: { [ticker: string]: ETFData };
   isLoading: boolean;
   error: string | null;
+  tokensInWallet: { [ticker: string]: number };
 }
 
 const initialState: WalletCryptoData = {
@@ -63,6 +64,21 @@ const initialState: WalletCryptoData = {
       },
       inWallet: 0,
     },
+  },
+  // TODO: Delete these hard-coded values once the backend is plumbed through
+  tokensInWallet: {
+    BTC: 1,
+    ETH: 10,
+    BNB: 100,
+    AVAX: 1000,
+    MATIC: 998,
+    ATOM: 1500,
+    OSMO: 15000,
+    CRO: 50000,
+    INJ: 2000,
+    KAVA: 12000,
+    DOT: 1750,
+    FTM: 20000,
   },
   isLoading: false,
   error: null,
@@ -126,7 +142,7 @@ const walletDataSlice = createSlice({
         }
       }
     },
-    updateWalletTokenQuantity: (
+    updateEtfQuantityInWallet: (
       state,
       action: PayloadAction<{ etfTicker: string; quantity: number }>
     ) => {
@@ -136,6 +152,13 @@ const walletDataSlice = createSlice({
         etf.inWallet = quantity;
       }
     },
+    updateTokenQuantityInWallet: (
+      state,
+      action: PayloadAction<{ tokenTicker: string; quantity: number }>
+    ) => {
+      const { tokenTicker, quantity } = action.payload;
+      state.tokensInWallet[tokenTicker] = quantity;
+    },
   },
 });
 
@@ -144,7 +167,7 @@ export const {
   selectToken,
   updateTokenData,
   updateFeeData,
-  updateWalletTokenQuantity,
+  updateEtfQuantityInWallet,
 } = walletDataSlice.actions;
 
 export default walletDataSlice.reducer;

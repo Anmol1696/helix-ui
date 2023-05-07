@@ -14,17 +14,17 @@ import { selectToken } from '../features/wallet-data/walletDataSlice';
 
 function createData(
   token: string,
-  currentWeight: number,
-  targetWeight: number,
+  inWallet: number,
+  weight: number,
   fees: number
 ) {
-  return { token, currentWeight, targetWeight, fees };
+  return { token, inWallet, weight, fees };
 }
 
 const CoinSelector = () => {
   const dispatch = useAppDispatch();
-  
-  const { etfs, selectedHelixFund, selectedToken} = useAppSelector((state: RootState) => state.walletCryptoData);
+  const { buySell: value } = useAppSelector((state: RootState) => state.buySellState);
+  const { etfs, selectedHelixFund, selectedToken, tokensInWallet } = useAppSelector((state: RootState) => state.walletCryptoData);
   const selectedETF = etfs[selectedHelixFund];
   useEffect(() => {
     dispatch(fetchCryptoData());
@@ -32,7 +32,7 @@ const CoinSelector = () => {
   }, [dispatch]);
   
   const rows = Object.entries(selectedETF?.tokens || {}).map(([ticker, token]) =>
-    createData(ticker, token.currentWeight, token.targetWeight, token.buyFee + token.sellFee)
+    createData(ticker, tokensInWallet[ticker], token.targetWeight, value === "buy" ? token.buyFee : token.sellFee)
   );
 
   const handleTokenSelect = (ticker: string) => {
@@ -88,8 +88,8 @@ const CoinSelector = () => {
           <TableHead>
             <TableRow style={headerStyle}>
               <TableCell style={headerItemStyle}>Token</TableCell>
-              <TableCell style={headerItemStyle} align="right">Current Weight</TableCell>
-              <TableCell style={headerItemStyle} align="right">Target Weight</TableCell>
+              <TableCell style={headerItemStyle} align="right"># in wallet</TableCell>
+              <TableCell style={headerItemStyle} align="right">Weight</TableCell>
               <TableCell style={headerItemStyle} align="right">Fees</TableCell>
             </TableRow>
           </TableHead>
@@ -106,8 +106,8 @@ const CoinSelector = () => {
                     <span>{row.token}</span>
                   </div>
                 </TableCell>
-                <TableCell align="right" sx={getRowStyle(row.token)}>{row.currentWeight} </TableCell>
-                <TableCell align="right" sx={getRowStyle(row.token)}>{row.targetWeight}</TableCell>
+                <TableCell align="right" sx={getRowStyle(row.token)}>{row.inWallet} </TableCell>
+                <TableCell align="right" sx={getRowStyle(row.token)}>{row.weight}</TableCell>
                 <TableCell align="right" sx={getRowStyle(row.token)}>{row.fees}</TableCell>
               </TableRow>
             ))}
