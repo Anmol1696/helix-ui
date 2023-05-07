@@ -13,7 +13,6 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { RootState } from '../store';
 import ETFInfo from "../components/ETFInfo";
-import WalletContent from "../components/WalletContent";
 import CryptoTable from "../components/CryptoTable";
 import HelixTransactionModal from "../components/HelixTransactionModal";
 import {switchBuySell } from "../features/wallet-data/buySellSlice";
