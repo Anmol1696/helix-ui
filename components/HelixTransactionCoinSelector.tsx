@@ -9,7 +9,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { RootState } from '../store';
 import { useAppSelector, useAppDispatch } from '../hooks';
-import { fetchCryptoData } from '../features/crypto-data/cryptoDataSlice';
+import { fetchCryptoData } from '../features/treasury-data/treasuryDataSlice';
 import { selectToken } from '../features/wallet-data/walletDataSlice';
 
 function createData(

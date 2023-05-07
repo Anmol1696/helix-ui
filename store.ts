@@ -1,16 +1,14 @@
 import { configureStore, ThunkMiddleware } from '@reduxjs/toolkit';
 import thunk from 'redux-thunk';
 import toggleReducer from './features/sidebar-toggle/toggleSlice';
-import cryptoDataReducer from './features/crypto-data/cryptoDataSlice';
-import exchangeDataReducer from './features/treasury-data/treasuryDataSlice';
+import treasuryDataReducer from './features/treasury-data/treasuryDataSlice';
 import walletCryptoDataReducer from './features/wallet-data/walletDataSlice';
 import buySellStateReducer from './features/wallet-data/buySellSlice'
 
 const store = configureStore({
   reducer: {
     toggle: toggleReducer,
-    cryptoData: cryptoDataReducer,
-    exchangeData: exchangeDataReducer,
+    treasuryData: treasuryDataReducer,
     walletCryptoData: walletCryptoDataReducer,
     buySellState: buySellStateReducer
   },
