@@ -1,5 +1,14 @@
 import React, { useEffect} from "react";
-import {Box, Button, Grid, Typography, MenuItem, FormControl, Modal} from "@mui/material";
+import {
+    Box,
+    Button,
+    Grid,
+    Typography,
+    MenuItem,
+    FormControl,
+    Modal,
+    Snackbar,
+  } from "@mui/material";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { RootState } from '../store';
@@ -9,6 +18,14 @@ import CryptoTable from "../components/CryptoTable";
 import HelixTransactionModal from "../components/HelixTransactionModal";
 import {switchBuySell } from "../features/wallet-data/buySellSlice";
 import {selectHelixFund, selectToken} from "../features/wallet-data/walletDataSlice";
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+  props,
+  ref,
+) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 export default function Home() {
     const dispatch = useAppDispatch();
@@ -19,6 +36,10 @@ export default function Home() {
     }, []);
 
     const [isModalOpen, setIsModalOpen] = React.useState(false);
+    const [notificationMessage, setNotificationMessage] = React.useState("");
+    const handleCloseNotification = () => {
+        setNotificationMessage("");
+    }
     const handleBuyModalOpen = () => {
         setIsModalOpen(true);
         dispatch(switchBuySell("buy"))
@@ -31,7 +52,10 @@ export default function Home() {
         dispatch(selectToken('btc'))
 
     }
-    const handleModalClose = () => setIsModalOpen(false);
+    const handleModalClose = () => {
+        setIsModalOpen(false);
+        setNotificationMessage("Test");
+    }
 
     const handleSelectHelixFund = (event: SelectChangeEvent) => {
         dispatch(selectHelixFund(event.target.value as string));
@@ -134,6 +158,19 @@ export default function Home() {
                     </div>
                 </Grid>
             </Grid>
-        </>
-    );    
+        <Snackbar
+            anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+            }}
+            open={Boolean(notificationMessage)}
+            autoHideDuration={5000}
+            onClose={handleCloseNotification}
+            >
+            <Alert onClose={handleCloseNotification} severity="success" sx={{ width: '100%' }}>
+                {notificationMessage}
+            </Alert>
+        </Snackbar>
+    </>
+  );
 };
