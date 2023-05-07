@@ -8,7 +8,14 @@ import CssBaseline from '@mui/material/CssBaseline';
 export default function Layout({ children }: PropsWithChildren) {
 
     return (
-      <ThemeProvider theme={createTheme()}>
+      <ThemeProvider theme={createTheme({
+        palette: {
+          mode: 'light',
+          background: {
+            default: '#F5F5F5', // Set the default background color
+          },
+        },
+      })}>  
         <CssBaseline enableColorScheme/>
         <Box>
             <AppBar/>

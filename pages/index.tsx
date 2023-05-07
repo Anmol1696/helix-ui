@@ -12,8 +12,8 @@ import {
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { RootState } from '../store';
+import ETFInfo from "../components/ETFInfo";
 import WalletContent from "../components/WalletContent";
-
 import CryptoTable from "../components/CryptoTable";
 import HelixTransactionModal from "../components/HelixTransactionModal";
 import {switchBuySell } from "../features/wallet-data/buySellSlice";
@@ -30,6 +30,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 export default function Home() {
     const dispatch = useAppDispatch();
     const { etfs, selectedHelixFund } = useAppSelector((state: RootState) => state.walletCryptoData);
+    const { ETFs } = useAppSelector((state: RootState) => state.treasuryData);
 
     useEffect(() => {
         document.title = 'Buy and Sell'
@@ -105,7 +106,10 @@ export default function Home() {
                                 {helixFundMenuItems}
                             </Select>
                         </FormControl>
-                        <WalletContent/>
+                        <ETFInfo 
+                            walletETFData={etfs[selectedHelixFund]}
+                            treasuryETFData={ETFs[selectedHelixFund]}
+                        />
                     </Box>
                     <Box sx={{ display: 'flex', justifyContent: 'center' }} mt={3}>
                         <Button

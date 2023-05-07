@@ -18,6 +18,23 @@ const cryptoIdToTickerAndName = {
   'fantom': { ticker: 'FTM', name: 'Fantom' },
 };
 
+const tickerToCryptoId = new Map([
+  ['BTC', 'bitcoin'],
+  ['ETH', 'ethereum'],
+  ['BNB', 'binancecoin'],
+  ['AVAX', 'avalanche-2'],
+  ['MATIC', 'matic-network'],
+  ['ATOM', 'cosmos'],
+  ['OSMO', 'osmosis'],
+  ['CRO', 'crypto-com-chain'],
+  ['INJ', 'injective-protocol'],
+  ['KAVA', 'kava'],
+  ['DOT', 'polkadot'],
+  ['FTM', 'fantom'],
+]);
+
+
+
 const BASE_URL = 'https://api.coingecko.com/api/v3/simple';
 const ENDPOINT = 'price';
 const VS_CURRENCIES = 'usd';
@@ -60,7 +77,7 @@ interface ETFHoldingData {
   sellFee: number;
 }
 
-interface ETFData {
+export interface ETFData {
   aum: number;
   nav: number;
   sharesOutstanding: number;
@@ -220,13 +237,15 @@ const treasuryDataSlice = createSlice({
         const holdings = ETF.holdings;
         let aum = 0;
         for (const tokenTicker in holdings) {
+          const tokenId = tickerToCryptoId.get(tokenTicker);
           const tokenData = holdings[tokenTicker];
-          const tokenPrice = cryptoData[tokenTicker]?.price || 0;
+          const tokenPrice = tokenId ? cryptoData[tokenId]?.price || 0 : 0;
           const tokenCount = tokenData.count;
           aum += tokenPrice * tokenCount;
         }
         ETF.nav = aum / ETF.sharesOutstanding;
         ETF.aum = aum;
+        state.ETFs[ticker] = ETF;
       }
     });
     builder.addCase(fetchCryptoData.rejected, (state, action) => {

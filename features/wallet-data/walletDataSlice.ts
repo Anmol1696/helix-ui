@@ -11,7 +11,7 @@ interface TokenData {
   selected: boolean;
 }
 
-interface ETFData {
+export interface ETFData {
   ticker: string;
   name: string;
   description: string;
@@ -151,6 +151,7 @@ const walletDataSlice = createSlice({
       if (etf) {
         etf.inWallet = quantity;
       }
+      state.etfs[etfTicker] = etf;
     },
     updateTokenQuantityInWallet: (
       state,
