@@ -1,11 +1,9 @@
 import React, { useEffect } from 'react';
-import { alpha, styled } from '@mui/material/styles';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { RootState } from '../store';
 import { fetchCryptoData } from '../features/treasury-data/treasuryDataSlice';
+import { formatPrice, formatMarketCap, StripedDataGrid } from '../utils/utils';
 import { 
-  DataGrid,
-  gridClasses,
   GridColDef,
   GridRowClassNameParams,
   GridValueFormatterParams
@@ -19,43 +17,6 @@ const formatCurrency = (value: number) => {
 const calculateMarketCapWeight = (marketCap: number, totalMarketCap: number) => {
   return +(marketCap / totalMarketCap * 100).toFixed(2);
 };
-
-const ODD_OPACITY = 0.2;
-
-const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
-  [`& .${gridClasses.row}.even`]: {
-    backgroundColor: theme.palette.grey[200],
-  },
-  [`& .${gridClasses.row}`]: {
-    '&:hover, &.Mui-hovered': {
-      backgroundColor: alpha(theme.palette.primary.main, ODD_OPACITY),
-      '@media (hover: none)': {
-        backgroundColor: 'transparent',
-      },
-    },
-    '&.Mui-selected': {
-      backgroundColor: alpha(
-        theme.palette.primary.main,
-        ODD_OPACITY + theme.palette.action.selectedOpacity,
-      ),
-      '&:hover, &.Mui-hovered': {
-        backgroundColor: alpha(
-          theme.palette.primary.main,
-          ODD_OPACITY +
-            theme.palette.action.selectedOpacity +
-            theme.palette.action.hoverOpacity,
-        ),
-        // Reset on touch devices, it doesn't add specificity
-        '@media (hover: none)': {
-          backgroundColor: alpha(
-            theme.palette.primary.main,
-            ODD_OPACITY + theme.palette.action.selectedOpacity,
-          ),
-        },
-      },
-    },
-  },
-}));
 
 const CryptoTable = () => {
   const dispatch = useAppDispatch();
@@ -108,7 +69,7 @@ const CryptoTable = () => {
         if (params.value == null) {
           return ''
         }
-        return formatCurrency(params.value);
+        return formatPrice(params.value);
       },
       minWidth: 100,
       headerClassName: 'custom-header',
@@ -123,7 +84,7 @@ const CryptoTable = () => {
         if (params.value == null) {
           return ''
         }
-        return formatCurrency(params.value);
+        return formatMarketCap(params.value);
       },
       flex: 1,
       minWidth: 175,
