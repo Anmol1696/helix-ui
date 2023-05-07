@@ -1,8 +1,4 @@
 import React, { useEffect } from "react";
-import Box from "@mui/material/Box";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -12,7 +8,6 @@ import TableRow from "@mui/material/TableRow";
 import { RootState } from '../store';
 import { useAppSelector, useAppDispatch } from '../hooks';
 import { fetchCryptoData } from '../features/crypto-data/cryptoDataSlice';
-import { selectHelixFund } from "../features/wallet-data/walletDataSlice";
 
 function createData(
   token: string,
@@ -26,15 +21,10 @@ function createData(
 const CoinSelector = () => {
   const dispatch = useAppDispatch();
 
-  const handleChange = (event: SelectChangeEvent) => {
-    dispatch(selectHelixFund(event.target.value as string));
-  };
-  
   useEffect(() => {
     dispatch(fetchCryptoData());
   }, [dispatch]);
   
-  const { value } = useAppSelector((state: RootState) => state.buySellState);
   const { etfs, selectedHelixFund } = useAppSelector((state: RootState) => state.walletCryptoData);
   const selectedETF = etfs[selectedHelixFund];
   
@@ -42,34 +32,11 @@ const CoinSelector = () => {
     createData(ticker, token.currentWeight, token.targetWeight, token.buyFee + token.sellFee)
   );
 
-  const helixFundMenuItems = Object.entries(etfs).map(([ticker, etf]) => (
-    <MenuItem value={ticker} key={ticker}>
-      {etf.name}
-    </MenuItem>
-  ));
-
   return (
     <div>
-      <Box
-        sx={{
-          minWidth: 120,
-          backgroundColor: value === "buy" ? "#3e4ed9" : "#d93f4e",
-        }}
-      >
-        <FormControl fullWidth>
-          <Select
-            labelId="market-name"
-            id="market-name"
-            value={selectedHelixFund}
-            label="Market"
-            onChange={handleChange}
-            sx={{ color: "white", fontWeight: "bold", textAlign: "center" }}
-          >
-            {helixFundMenuItems}
-          </Select>
-        </FormControl>
-      </Box>
-      <TableContainer>
+      <TableContainer 
+        sx={{ maxHeight: "100%"}}
+        >
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
