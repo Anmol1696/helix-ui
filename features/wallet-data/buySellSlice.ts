@@ -24,8 +24,8 @@ export const buySellSlice = createSlice({
         state.buttonHighlightColor = "#1565c0";
       } else {
         state.buySell = "sell";
-        state.buttonColor = "#d32f2f";
-        state.buttonHighlightColor = "#ef5350";
+        state.buttonColor = "#c62828";
+        state.buttonHighlightColor = "#f5736b";
       }
     },
   },

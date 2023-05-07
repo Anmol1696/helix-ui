@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { alpha } from '@mui/material/styles';
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -43,24 +44,30 @@ const CoinSelector = () => {
 
   const getRowStyle = (token: string) => { 
     const isSelected = selectedETF?.tokens[token]?.selected;
-    const backgroundColor = isSelected ? buttonColor : "inherit";
-    const color = isSelected ? "white" : "black";
+    const selectedColor = alpha(buttonColor, 0.3);
+    const backgroundColor = isSelected ? selectedColor : "inherit";
+    const highlightColor = alpha(buttonHighlightColor, 0.1);
   
     return {
       "&:last-child td, &:last-child th": {
         border: 0,
       },
       backgroundColor,
-      color,
       "&:hover, &.Mui-hovered": {
-        backgroundColor: isSelected ? buttonColor : buttonHighlightColor,
+        backgroundColor: isSelected ? selectedColor : highlightColor,
         cursor: "pointer",
       },
       "&.Mui-selected": {
-        backgroundColor: isSelected ? buttonColor : "inherit",
+        backgroundColor: isSelected ? selectedColor : "inherit",
         color: isSelected ? "white" : "black",
       },
     };
+  };
+
+  const headerStyle = {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
   };
 
   const iconCellStyle = {
