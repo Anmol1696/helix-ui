@@ -65,10 +65,13 @@ const CoinSelector = () => {
   };
 
   const headerStyle = {
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
+    backgroundColor: '#f7f7f7',
   };
+
+  const headerItemStyle = {
+    fontWeight: '500',
+    fontSize: '0.9rem',
+  }
 
   const iconCellStyle = {
     display: "flex",
@@ -83,11 +86,11 @@ const CoinSelector = () => {
         >
         <Table aria-label="simple table">
           <TableHead>
-            <TableRow>
-              <TableCell>Token</TableCell>
-              <TableCell align="right">Current Weight</TableCell>
-              <TableCell align="right">Target Weight</TableCell>
-              <TableCell align="right">Fees</TableCell>
+            <TableRow style={headerStyle}>
+              <TableCell style={headerItemStyle}>Token</TableCell>
+              <TableCell style={headerItemStyle} align="right">Current Weight</TableCell>
+              <TableCell style={headerItemStyle} align="right">Target Weight</TableCell>
+              <TableCell style={headerItemStyle} align="right">Fees</TableCell>
             </TableRow>
           </TableHead>
           <TableBody component="tbody">
