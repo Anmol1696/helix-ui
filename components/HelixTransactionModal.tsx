@@ -2,7 +2,6 @@ import type { NextPage } from 'next'
 import { RootState } from '../store';
 import { useAppSelector, useAppDispatch } from '../hooks';
 
-import { useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -13,8 +12,10 @@ import InputForm from "./HelixTransactionInputForm";
 import { selectHelixFund } from "../features/wallet-data/walletDataSlice";
 
 const HelixTransactionModal: NextPage = () => {
-    const { value } = useAppSelector((state: RootState) => state.buySellState);
+    const { buySell: value } = useAppSelector((state: RootState) => state.buySellState);
 
+    const { buttonColor } = useAppSelector((state: RootState) => state.buySellState);
+    const { buttonHighlightColor } = useAppSelector((state: RootState) => state.buySellState);
     const { etfs, selectedHelixFund } = useAppSelector(
       (state: RootState) => state.walletCryptoData
     );
@@ -31,17 +32,15 @@ const HelixTransactionModal: NextPage = () => {
       </MenuItem>
     ));
 
-    const theme = useTheme();
-
     return (
       <>
         <Box
           sx={{
             maxHeight: "60px",
-            backgroundColor: value === "buy" ? "#3F51B5" : "#d32f2f",
+            backgroundColor: buttonColor,
             marginBottom: "0.2rem",
             "&:hover": {
-              background: value === "buy" ? "#1565c0" : "#ef5350",
+              background: buttonHighlightColor,
             },
           }}
         >

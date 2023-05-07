@@ -8,7 +8,7 @@ import WalletContent from "../components/WalletContent";
 import CryptoTable from "../components/CryptoTable";
 import HelixTransactionModal from "../components/HelixTransactionModal";
 import {switchBuySell } from "../features/wallet-data/buySellSlice";
-import {selectHelixFund} from "../features/wallet-data/walletDataSlice";
+import {selectHelixFund, selectToken} from "../features/wallet-data/walletDataSlice";
 
 export default function Home() {
     const dispatch = useAppDispatch();
@@ -22,16 +22,18 @@ export default function Home() {
     const handleBuyModalOpen = () => {
         setIsModalOpen(true);
         dispatch(switchBuySell("buy"))
+        dispatch(selectToken('btc'))
 
     }
     const handleSellModalOpen = () => {
         setIsModalOpen(true);
         dispatch(switchBuySell("sell"))
+        dispatch(selectToken('btc'))
 
     }
     const handleModalClose = () => setIsModalOpen(false);
 
-    const handleSelectHeflixFund = (event: SelectChangeEvent) => {
+    const handleSelectHelixFund = (event: SelectChangeEvent) => {
         dispatch(selectHelixFund(event.target.value as string));
     };
 
@@ -63,7 +65,7 @@ export default function Home() {
                                 labelId="market-name"
                                 id="market-name"
                                 value={selectedHelixFund}
-                                onChange={handleSelectHeflixFund}
+                                onChange={handleSelectHelixFund}
                                 sx={{
                                     background: '#3F51B5',
                                     color: 'white',

@@ -1,12 +1,15 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from '../../store';
+import { createSlice } from "@reduxjs/toolkit";
 
 export interface BuySellState {
-  value: string;
+  buySell: string;
+  buttonColor: string,
+  buttonHighlightColor: string,
 }
 
 const initialState: BuySellState = {
-  value: "buy",
+  buySell: "buy",
+  buttonColor: "#3F51B5",
+  buttonHighlightColor: "#1565c0",
 };
 
 export const buySellSlice = createSlice({
@@ -16,9 +19,13 @@ export const buySellSlice = createSlice({
   reducers: {
     switchBuySell: (state, action) => {
       if (action.payload === "buy") {
-        state.value = "buy";
+        state.buySell = "buy";
+        state.buttonColor = "#3F51B5";
+        state.buttonHighlightColor = "#1565c0";
       } else {
-        state.value = "sell";
+        state.buySell = "sell";
+        state.buttonColor = "#c62828";
+        state.buttonHighlightColor = "#f5736b";
       }
     },
   },

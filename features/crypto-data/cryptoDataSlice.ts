@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { HYDRATE } from "next-redux-wrapper";
 import axios from 'axios';
 
-interface TokenData {
+export interface TokenData {
     name: string;
     ticker: string;
     price: number;
