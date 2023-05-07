@@ -3,11 +3,12 @@ import { HYDRATE } from 'next-redux-wrapper';
 
 interface TokenData {
     ticker: string;
-    targetWeight: number;
     price: number;
     currentWeight: number;
+    targetWeight: number;
     buyFee: number;
     sellFee: number;
+    selected: boolean;
   }
 
 interface ETFData {
@@ -33,18 +34,18 @@ const initialState: WalletCryptoData = {
             name: 'Helix Total Market',
             description: 'Helix Total Market (HTM) provides exposure to the entire cryptocurrency market.',
             tokens: {
-            BTC: { ticker: 'BTC', targetWeight: 0.35, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
-            ETH: { ticker: 'ETH', targetWeight: 0.15, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
-            BNB: { ticker: 'BNB', targetWeight: 0.05, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
-            AVAX: { ticker: 'AVAX', targetWeight: 0.05, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
-            MATIC: { ticker: 'MATIC', targetWeight: 0.05, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
-            ATOM: { ticker: 'ATOM', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
-            OSMO: { ticker: 'OSMO', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
-            CRO: { ticker: 'CRO', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
-            INJ: { ticker: 'INJ', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
-            KAVA: { ticker: 'KAVA', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
-            DOT: { ticker: 'DOT', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
-            FTM: { ticker: 'FTM', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
+            BTC: { ticker: 'BTC', targetWeight: 0.35, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
+            ETH: { ticker: 'ETH', targetWeight: 0.15, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
+            BNB: { ticker: 'BNB', targetWeight: 0.05, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
+            AVAX: { ticker: 'AVAX', targetWeight: 0.05, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
+            MATIC: { ticker: 'MATIC', targetWeight: 0.05, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
+            ATOM: { ticker: 'ATOM', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
+            OSMO: { ticker: 'OSMO', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
+            CRO: { ticker: 'CRO', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
+            INJ: { ticker: 'INJ', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
+            KAVA: { ticker: 'KAVA', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
+            DOT: { ticker: 'DOT', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
+            FTM: { ticker: 'FTM', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
             },
             inWallet: 0,
         },
@@ -53,10 +54,10 @@ const initialState: WalletCryptoData = {
             name: 'Helix Degen Market',
             description: 'Helix Degen Market (HDM) provides exposure to the degen meme coin market.',
             tokens: {
-            ATOM: { ticker: 'ATOM', targetWeight: 0.25, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
-            OSMO: { ticker: 'OSMO', targetWeight: 0.25, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
-            INJ: { ticker: 'INJ', targetWeight: 0.25, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },
-            KAVA: { ticker: 'KAVA', targetWeight: 0.25, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0 },  
+            ATOM: { ticker: 'ATOM', targetWeight: 0.25, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
+            OSMO: { ticker: 'OSMO', targetWeight: 0.25, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
+            INJ: { ticker: 'INJ', targetWeight: 0.25, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
+            KAVA: { ticker: 'KAVA', targetWeight: 0.25, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },  
             },
             inWallet: 0,
             },
@@ -77,6 +78,22 @@ const walletDataSlice = createSlice({
       },
       selectHelixFund: (state, action: PayloadAction<string>) => {
         state.selectedHelixFund = action.payload;
+      },
+      selectToken: (state, action: PayloadAction<string>) => {
+        const { selectedHelixFund, etfs } = state;
+        const selectedETF = etfs[selectedHelixFund];
+  
+        // Deselect the previously selected token
+        const prevSelectedToken = Object.values(selectedETF.tokens).find((token) => token.selected);
+        if (prevSelectedToken) {
+          prevSelectedToken.selected = false;
+        }
+  
+        // Select the new token
+        const selectedToken = selectedETF.tokens[action.payload];
+        if (selectedToken) {
+          selectedToken.selected = true;
+        }
       },
       updateTokenData: (
         state,
@@ -118,7 +135,7 @@ const walletDataSlice = createSlice({
     },
   });
   
-  export const { selectHelixFund, updateTokenData, updateFeeData, updateWalletTokenQuantity } =
+  export const { selectHelixFund, selectToken, updateTokenData, updateFeeData, updateWalletTokenQuantity } =
     walletDataSlice.actions;
   
   export default walletDataSlice.reducer;

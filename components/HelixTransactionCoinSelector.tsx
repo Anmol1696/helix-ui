@@ -8,6 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import { RootState } from '../store';
 import { useAppSelector, useAppDispatch } from '../hooks';
 import { fetchCryptoData } from '../features/crypto-data/cryptoDataSlice';
+import { selectToken } from '../features/wallet-data/walletDataSlice';
 
 function createData(
   token: string,
@@ -32,6 +33,35 @@ const CoinSelector = () => {
     createData(ticker, token.currentWeight, token.targetWeight, token.buyFee + token.sellFee)
   );
 
+  const handleTokenSelect = (ticker: string) => {
+    dispatch(selectToken(ticker));
+  };
+
+  const { buttonColor } = useAppSelector((state: RootState) => state.buySellState);
+  const { buttonHighlightColor } = useAppSelector((state: RootState) => state.buySellState);
+
+  const getRowStyle = (token: string) => { 
+    const isSelected = selectedETF?.tokens[token]?.selected;
+    const backgroundColor = isSelected ? buttonColor : "inherit";
+    const color = isSelected ? "white" : "black";
+  
+    return {
+      "&:last-child td, &:last-child th": {
+        border: 0,
+      },
+      backgroundColor,
+      color,
+      "&:hover, &.Mui-hovered": {
+        backgroundColor: isSelected ? buttonColor : buttonHighlightColor,
+        cursor: "pointer",
+      },
+      "&.Mui-selected": {
+        backgroundColor: isSelected ? buttonColor : "inherit",
+        color: isSelected ? "white" : "black",
+      },
+    };
+  };
+
   return (
     <div>
       <TableContainer 
@@ -46,18 +76,19 @@ const CoinSelector = () => {
               <TableCell align="right">Fees</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
+          <TableBody component="tbody">
             {rows.map((row) => (
               <TableRow
                 key={row.token}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                sx={getRowStyle(row.token)}
+                onClick={() => handleTokenSelect(row.token)}
               >
-                <TableCell component="th" scope="row">
+                <TableCell component="th" scope="row" sx={getRowStyle(row.token)}>
                   {row.token}
                 </TableCell>
-                <TableCell align="right">{row.currentWeight}</TableCell>
-                <TableCell align="right">{row.targetWeight}</TableCell>
-                <TableCell align="right">{row.fees}</TableCell>
+                <TableCell align="right" sx={getRowStyle(row.token)}>{row.currentWeight} </TableCell>
+                <TableCell align="right" sx={getRowStyle(row.token)}>{row.targetWeight}</TableCell>
+                <TableCell align="right" sx={getRowStyle(row.token)}>{row.fees}</TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -7,7 +7,10 @@ import {switchBuySell } from "../features/wallet-data/buySellSlice";
 import { RootState } from '../store';
 
 const InputForm = () => {
-   const { value } = useAppSelector((state: RootState) => state.buySellState);
+  const { buySell: value } = useAppSelector((state: RootState) => state.buySellState);
+  const { buttonColor } = useAppSelector((state: RootState) => state.buySellState);
+  const { buttonHighlightColor } = useAppSelector((state: RootState) => state.buySellState);
+
   const dispatch = useAppDispatch();
   return (
     <div>
@@ -24,11 +27,11 @@ const InputForm = () => {
           sx={{
             width: "50%",
             height: "55px",
-            backgroundColor: value === "buy" ? "#3F51B5" : "#bfbfbf",
+            backgroundColor: value === "buy" ? buttonColor : "#bfbfbf",
             color: value === "buy" ? "white" : "black",
             fontWeight: "bold",
             "&:hover": {
-              background: "#1565c0",
+              background: buttonHighlightColor,
             },
           }}
           onClick={() => dispatch(switchBuySell("buy"))}
@@ -40,11 +43,11 @@ const InputForm = () => {
           sx={{
             width: "50%",
             height: "55px",
-            backgroundColor: value === "buy" ? "#bfbfbf" : "#d32f2f",
+            backgroundColor: value === "buy" ? "#bfbfbf" : buttonColor,
             color: value === "buy" ? "black" : "white",
             fontWeight: "bold",
             "&:hover": {
-              background: "#ef5350",
+              background: buttonHighlightColor,
             },
           }}
           onClick={() => dispatch(switchBuySell("sell"))}
@@ -96,10 +99,10 @@ const InputForm = () => {
         sx={{
           width: "100%",
           height: "60px",
-          backgroundColor: value === "buy" ? "#3F51B5" : "#d32f2f",
+          backgroundColor: buttonColor,
           fontWeight: "bold",
           "&:hover": {
-            background: value === "buy" ? "#1565c0" : "#ef5350",
+            background: buttonHighlightColor,
           },
         }}
       >

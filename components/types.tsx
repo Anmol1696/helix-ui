@@ -1,4 +1,4 @@
-import { MouseEventHandler, ReactNode } from 'react';
+import { MouseEventHandler } from 'react';
 import { IconType } from 'react-icons';
 
 export interface ChooseChainInfo {
