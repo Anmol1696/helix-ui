@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { alpha, styled } from '@mui/material/styles';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { RootState } from '../store';
-import { fetchCryptoData } from '../features/crypto-data/cryptoDataSlice';
+import { fetchCryptoData } from '../features/treasury-data/treasuryDataSlice';
 import { 
   DataGrid,
   gridClasses,
@@ -59,7 +59,8 @@ const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
 
 const CryptoTable = () => {
   const dispatch = useAppDispatch();
-  const { cryptoData, isLoading } = useAppSelector((state: RootState) => state.cryptoData);
+  const { cryptoData, isLoading, ETFs } = useAppSelector((state: RootState) => state.treasuryData);
+
   useEffect(() => {
     dispatch(fetchCryptoData());
   }, [dispatch]);
@@ -130,7 +131,7 @@ const CryptoTable = () => {
     },
     {
       field: 'weight',
-      headerName: 'Weight',
+      headerName: 'Target Weight',
       flex: 1,
       align:'right',
       headerAlign: 'right',

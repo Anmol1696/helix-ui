@@ -6,8 +6,8 @@ import TextField from "@mui/material/TextField";
 
 import {switchBuySell } from "../features/wallet-data/buySellSlice";
 import { RootState } from '../store';
-import { updateWalletTokenQuantity } from '../features/wallet-data/walletDataSlice';
-import { buyETF, sellETF } from "../features/exchange-data/exchangeDataSlice";
+import { updateEtfQuantityInWallet } from '../features/wallet-data/walletDataSlice';
+import { buyETF, sellETF } from "../features/treasury-data/treasuryDataSlice";
 
 
 const InputForm = () => {
@@ -43,7 +43,10 @@ const InputForm = () => {
       const feeAmount = quantity * fee;
   
       // Update wallet token quantity
-      dispatch(updateWalletTokenQuantity({ etfTicker: selectedHelixFund, quantity }));
+      dispatch(updateEtfQuantityInWallet({
+        etfTicker: selectedHelixFund,
+        quantity: quantity,
+      }));
   
       if (value === "buy") {
         // Perform buy action

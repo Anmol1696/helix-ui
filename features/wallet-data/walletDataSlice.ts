@@ -11,7 +11,7 @@ interface TokenData {
   selected: boolean;
 }
 
-interface ETFData {
+export interface ETFData {
   ticker: string;
   name: string;
   description: string;
@@ -25,6 +25,7 @@ interface WalletCryptoData {
   etfs: { [ticker: string]: ETFData };
   isLoading: boolean;
   error: string | null;
+  tokensInWallet: { [ticker: string]: number };
 }
 
 const initialState: WalletCryptoData = {
@@ -36,18 +37,18 @@ const initialState: WalletCryptoData = {
       name: 'Helix Total Market',
       description: 'Helix Total Market (HTM) provides exposure to the entire cryptocurrency market.',
       tokens: {
-        BTC: { ticker: 'BTC', targetWeight: 0.35, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: true },
-        ETH: { ticker: 'ETH', targetWeight: 0.15, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
-        BNB: { ticker: 'BNB', targetWeight: 0.05, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
-        AVAX: { ticker: 'AVAX', targetWeight: 0.05, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
-        MATIC: { ticker: 'MATIC', targetWeight: 0.05, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
-        ATOM: { ticker: 'ATOM', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
-        OSMO: { ticker: 'OSMO', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
-        CRO: { ticker: 'CRO', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
-        INJ: { ticker: 'INJ', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
-        KAVA: { ticker: 'KAVA', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
-        DOT: { ticker: 'DOT', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
-        FTM: { ticker: 'FTM', targetWeight: 0.03, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
+        BTC: { ticker: 'BTC', targetWeight: 0.35, price: 0, currentWeight: 0.64, buyFee: 0, sellFee: 0, selected: true },
+        ETH: { ticker: 'ETH', targetWeight: 0.15, price: 0, currentWeight: 0.26, buyFee: 0, sellFee: 0, selected: false },
+        BNB: { ticker: 'BNB', targetWeight: 0.05, price: 0, currentWeight: 0.059, buyFee: 0, sellFee: 0, selected: false },
+        AVAX: { ticker: 'AVAX', targetWeight: 0.05, price: 0, currentWeight: 0.01, buyFee: 0, sellFee: 0, selected: false },
+        MATIC: { ticker: 'MATIC', targetWeight: 0.05, price: 0, currentWeight: 0.008, buyFee: 0, sellFee: 0, selected: false },
+        ATOM: { ticker: 'ATOM', targetWeight: 0.03, price: 0, currentWeight: 0.0063, buyFee: 0, sellFee: 0, selected: false },
+        OSMO: { ticker: 'OSMO', targetWeight: 0.03, price: 0, currentWeight: 0.0037, buyFee: 0, sellFee: 0, selected: false },
+        CRO: { ticker: 'CRO', targetWeight: 0.03, price: 0, currentWeight: 0.002, buyFee: 0, sellFee: 0, selected: false },
+        INJ: { ticker: 'INJ', targetWeight: 0.03, price: 0, currentWeight: 0.0013, buyFee: 0, sellFee: 0, selected: false },
+        KAVA: { ticker: 'KAVA', targetWeight: 0.03, price: 0, currentWeight: 0.0007, buyFee: 0, sellFee: 0, selected: false },
+        DOT: { ticker: 'DOT', targetWeight: 0.03, price: 0, currentWeight: 0.0005, buyFee: 0, sellFee: 0, selected: false },
+        FTM: { ticker: 'FTM', targetWeight: 0.03, price: 0, currentWeight: 0.0004, buyFee: 0, sellFee: 0, selected: false },
       },
       inWallet: 0,
     },
@@ -56,13 +57,28 @@ const initialState: WalletCryptoData = {
       name: 'Helix Degen Market',
       description: 'Helix Degen Market (HDM) provides exposure to the degen meme coin market.',
       tokens: {
-        ATOM: { ticker: 'ATOM', targetWeight: 0.25, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
-        OSMO: { ticker: 'OSMO', targetWeight: 0.25, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
-        INJ: { ticker: 'INJ', targetWeight: 0.25, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
-        KAVA: { ticker: 'KAVA', targetWeight: 0.25, price: 0, currentWeight: 0, buyFee: 0, sellFee: 0, selected: false },
+        ATOM: { ticker: 'ATOM', targetWeight: 0.35, price: 0, currentWeight: 0.5, buyFee: 0, sellFee: 0, selected: false },
+        OSMO: { ticker: 'OSMO', targetWeight: 0.3, price: 0, currentWeight: 0.27, buyFee: 0, sellFee: 0, selected: false },
+        INJ: { ticker: 'INJ', targetWeight: 0.25, price: 0, currentWeight: 0.23, buyFee: 0, sellFee: 0, selected: false },
+        KAVA: { ticker: 'KAVA', targetWeight: 0.2, price: 0, currentWeight: 0.1, buyFee: 0, sellFee: 0, selected: false },
       },
       inWallet: 0,
     },
+  },
+  // TODO: Delete these hard-coded values once the backend is plumbed through
+  tokensInWallet: {
+    BTC: 1,
+    ETH: 10,
+    BNB: 100,
+    AVAX: 1000,
+    MATIC: 998,
+    ATOM: 1500,
+    OSMO: 15000,
+    CRO: 50000,
+    INJ: 2000,
+    KAVA: 12000,
+    DOT: 1750,
+    FTM: 20000,
   },
   isLoading: false,
   error: null,
@@ -126,7 +142,7 @@ const walletDataSlice = createSlice({
         }
       }
     },
-    updateWalletTokenQuantity: (
+    updateEtfQuantityInWallet: (
       state,
       action: PayloadAction<{ etfTicker: string; quantity: number }>
     ) => {
@@ -135,6 +151,14 @@ const walletDataSlice = createSlice({
       if (etf) {
         etf.inWallet = quantity;
       }
+      state.etfs[etfTicker] = etf;
+    },
+    updateTokenQuantityInWallet: (
+      state,
+      action: PayloadAction<{ tokenTicker: string; quantity: number }>
+    ) => {
+      const { tokenTicker, quantity } = action.payload;
+      state.tokensInWallet[tokenTicker] = quantity;
     },
   },
 });
@@ -144,7 +168,7 @@ export const {
   selectToken,
   updateTokenData,
   updateFeeData,
-  updateWalletTokenQuantity,
+  updateEtfQuantityInWallet,
 } = walletDataSlice.actions;
 
 export default walletDataSlice.reducer;
