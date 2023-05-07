@@ -48,19 +48,19 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const mainListItems = (
   <React.Fragment>
     <Link href="/" passHref>
-      <ListItemButton >
-          <ListItemIcon>
-            <TrendingUpIcon />
-          </ListItemIcon>
-          <ListItemText primary="Portfolio" />
-      </ListItemButton>
-    </Link>
-    <Link href="/BuySell" passHref>
       <ListItemButton>
           <ListItemIcon>
             <CurrencyExchangeIcon />
           </ListItemIcon>
           <ListItemText primary="Buy and Sell" />
+      </ListItemButton>
+    </Link>
+    <Link href="/Portfolio" passHref>
+      <ListItemButton >
+          <ListItemIcon>
+            <TrendingUpIcon />
+          </ListItemIcon>
+          <ListItemText primary="Portfolio" />
       </ListItemButton>
     </Link>
   </React.Fragment>
