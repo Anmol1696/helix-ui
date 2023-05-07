@@ -64,7 +64,17 @@ export default function Home() {
                                 id="market-name"
                                 value={selectedHelixFund}
                                 onChange={handleSelectHeflixFund}
-                                sx={{background: '#3e4ed9', color: 'white', fontSize: 18, fontWeight: "bold", textAlign: "center", borderRadius: 3}}
+                                sx={{
+                                    background: '#3F51B5',
+                                    color: 'white',
+                                    fontSize: 18,
+                                    fontWeight: "bold",
+                                    textAlign: "center",
+                                    borderRadius: 3,
+                                    "&:hover": {
+                                        background: "#1565c0",
+                                      },
+                                }}
                             >
                                 {helixFundMenuItems}
                             </Select>
@@ -72,7 +82,19 @@ export default function Home() {
                         <WalletContent/>
                     </Box>
                     <Box sx={{ display: 'flex', justifyContent: 'center' }} mt={3}>
-                        <Button variant="contained" sx={{backgroundColor: "#3e4ed9", mr: 2}} onClick={handleBuyModalOpen} >Buy HTM</Button>
+                        <Button
+                            variant="contained"
+                            sx={{
+                                backgroundColor: "#3F51B5",
+                                mr: 2,
+                                "&:hover": {
+                                    background: "#1565c0",
+                                },
+                            }}
+                            onClick={handleBuyModalOpen}
+                        >
+                            Buy HTM
+                        </Button>
                         <Modal
                             open={isModalOpen}
                             onClose={handleModalClose}
@@ -84,7 +106,17 @@ export default function Home() {
                             </Box>
                             
                         </Modal>
-                        <Button variant="contained" sx={{backgroundColor: "#d93f4e"}} onClick={handleSellModalOpen}>Sell HTM</Button>
+                        <Button
+                            variant="contained"
+                            sx={{
+                                backgroundColor: "#d32f2f",
+                                "&:hover": {
+                                    background: "#ef5350",
+                                },
+                                }}
+                            onClick={handleSellModalOpen}>
+                            Sell HTM
+                        </Button>
                     </Box>
                 </Grid>
             </Grid>

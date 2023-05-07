@@ -12,7 +12,6 @@ import { useStyles } from './wallet-connect.styles';
 
 export const ConnectWalletButton = ({
   buttonText,
-  isLoading,
   isDisabled,
   icon,
   onClickConnectBtn,

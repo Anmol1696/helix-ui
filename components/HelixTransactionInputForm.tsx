@@ -24,11 +24,11 @@ const InputForm = () => {
           sx={{
             width: "50%",
             height: "55px",
-            backgroundColor: value === "buy" ? "#3e4ed9" : "#bfbfbf",
+            backgroundColor: value === "buy" ? "#3F51B5" : "#bfbfbf",
             color: value === "buy" ? "white" : "black",
             fontWeight: "bold",
             "&:hover": {
-              background: "#3e4ed9",
+              background: "#1565c0",
             },
           }}
           onClick={() => dispatch(switchBuySell("buy"))}
@@ -40,11 +40,11 @@ const InputForm = () => {
           sx={{
             width: "50%",
             height: "55px",
-            backgroundColor: value === "buy" ? "#bfbfbf" : "#d93f4e",
+            backgroundColor: value === "buy" ? "#bfbfbf" : "#d32f2f",
             color: value === "buy" ? "black" : "white",
             fontWeight: "bold",
             "&:hover": {
-              background: "#d93f4e",
+              background: "#ef5350",
             },
           }}
           onClick={() => dispatch(switchBuySell("sell"))}
@@ -96,8 +96,11 @@ const InputForm = () => {
         sx={{
           width: "100%",
           height: "60px",
-          backgroundColor: value === "buy" ? "#3e4ed9" : "#d93f4e",
+          backgroundColor: value === "buy" ? "#3F51B5" : "#d32f2f",
           fontWeight: "bold",
+          "&:hover": {
+            background: value === "buy" ? "#1565c0" : "#ef5350",
+          },
         }}
       >
         {value === "buy" ? "buy" : "sell"}

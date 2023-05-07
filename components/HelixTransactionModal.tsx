@@ -2,6 +2,7 @@ import type { NextPage } from 'next'
 import { RootState } from '../store';
 import { useAppSelector, useAppDispatch } from '../hooks';
 
+import { useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -30,14 +31,18 @@ const HelixTransactionModal: NextPage = () => {
       </MenuItem>
     ));
 
+    const theme = useTheme();
+
     return (
       <>
         <Box
           sx={{
-            maxHeight: "400px",
-            overflowY: "auto",
-            backgroundColor: value === "buy" ? "#3e4ed9" : "#d93f4e",
+            maxHeight: "60px",
+            backgroundColor: value === "buy" ? "#3F51B5" : "#d32f2f",
             marginBottom: "0.2rem",
+            "&:hover": {
+              background: value === "buy" ? "#1565c0" : "#ef5350",
+            },
           }}
         >
           <FormControl fullWidth>
