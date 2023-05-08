@@ -12,6 +12,7 @@ import { RootState } from '../store';
 import { useAppSelector, useAppDispatch } from '../hooks';
 import { fetchCryptoData } from '../features/treasury-data/treasuryDataSlice';
 import { selectToken } from '../features/wallet-data/walletDataSlice';
+import { formatAmount } from '../utils/utils';
 
 function createData(
   token: string,
@@ -29,7 +30,7 @@ const CoinSelector = () => {
     = useAppSelector((state: RootState) => state.walletCryptoData);
   useEffect(() => {
     dispatch(fetchCryptoData());
-    dispatch(selectToken(selectedToken))
+    dispatch(selectToken("BTC"))
   }, [dispatch]);
 
   const { ETFs } = useAppSelector((state: RootState) => state.treasuryData);
@@ -117,7 +118,7 @@ const CoinSelector = () => {
                     <span>{row.token}</span>
                   </div>
                 </TableCell>
-                <TableCell align="right" sx={getRowStyle(row.token)}>{row.inWallet} </TableCell>
+                <TableCell align="right" sx={getRowStyle(row.token)}>{formatAmount(row.inWallet, 2)} </TableCell>
                 <TableCell align="right" sx={getRowStyle(row.token)}>{formatPercentage(row.weight)}</TableCell>
                 <TableCell align="right" sx={getRowStyle(row.token)}>{formatFees(row.fees)}</TableCell>
               </TableRow>
