@@ -7,11 +7,11 @@ import { InputAdornment } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import TextField from "@mui/material/TextField";
 import { RootState } from '../store';
-import { switchBuySell } from "../features/wallet-data/buySellSlice";
+import { setOpenModal, switchBuySell, setNotificationMessage } from "../features/wallet-data/buySellSlice";
 import { fetchCryptoData } from '../features/treasury-data/treasuryDataSlice';
 import { updateTokenQuantityInWallet } from '../features/wallet-data/walletDataSlice';
 import { calculateFee, buyETF, sellETF } from "../features/treasury-data/treasuryDataSlice";
-import { formatAmount, formatPrice } from '../utils/utils';
+import { formatPrice } from '../utils/utils';
 
 const InputForm = () => {
   const { buySell: value } = useAppSelector((state: RootState) => state.buySellState);
@@ -91,7 +91,6 @@ const InputForm = () => {
       }
     }
   };
-  
 
   const handleBuySell = () => {
     if (selectedToken && selectedHelixFund) {
@@ -108,13 +107,16 @@ const InputForm = () => {
         const fees = calculateFee(transactionValue, fee);
         const adjustedTransactionValue = transactionValue - fees;
         const price = tokenData.price;
+        const quantityTransacted = 
+          buy ? adjustedTransactionValue / price : adjustedTransactionValue / nav;
+
         const newTokenQuantity =
           buy
           ? tokensInWallet[selectedToken] - quantity
-          : tokensInWallet[selectedToken] + adjustedTransactionValue / price;
+          : tokensInWallet[selectedToken] + quantityTransacted;
         const newETFQuantity =
           buy
-          ? tokensInWallet[selectedHelixFund] + adjustedTransactionValue / nav
+          ? tokensInWallet[selectedHelixFund] + quantityTransacted
           : tokensInWallet[selectedHelixFund] - quantity;
   
         // Update wallet token quantities
@@ -136,6 +138,7 @@ const InputForm = () => {
             tokenPrice: price,
             fee: fees,
           }));
+          dispatch(setNotificationMessage("Successfully bought " + quantityTransacted + " " + selectedHelixFund + "!"));
         } else {
           // Perform sell action
           dispatch(sellETF({
@@ -145,12 +148,14 @@ const InputForm = () => {
             tokenPrice: price,
             fee: fees,
           }));
+          dispatch(setNotificationMessage("Successfully sold " + quantity + " " + selectedHelixFund + "!"));
         }
       }
       // Reset input fields
       setPayAmount(0);
       setReceiveAmount(0);
       setFeeAmount(0);
+      dispatch(setOpenModal(false));
     }
   };
   

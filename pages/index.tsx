@@ -16,7 +16,7 @@ import { fetchCryptoData } from '../features/treasury-data/treasuryDataSlice';
 import ETFInfo from "../components/ETFInfo";
 import CryptoTable from "../components/CryptoTable";
 import HelixTransactionModal from "../components/HelixTransactionModal";
-import {switchBuySell } from "../features/wallet-data/buySellSlice";
+import { setOpenModal, switchBuySell, setNotificationMessage } from "../features/wallet-data/buySellSlice";
 import {selectHelixFund, selectToken} from "../features/wallet-data/walletDataSlice";
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
@@ -40,26 +40,26 @@ export default function Home() {
         document.title = 'Buy and Sell'
     }, []);
 
-    const [isModalOpen, setIsModalOpen] = React.useState(false);
-    const [notificationMessage, setNotificationMessage] = React.useState("");
+    const { openModal } = useAppSelector((state: RootState) => state.buySellState);
+
+    const { notificationMessage } = useAppSelector((state: RootState) => state.buySellState);
+
     const handleCloseNotification = () => {
-        setNotificationMessage("");
+        dispatch(setNotificationMessage(""));
     }
     const handleBuyModalOpen = () => {
-        setIsModalOpen(true);
+        dispatch(setOpenModal(true));
         dispatch(switchBuySell("buy"))
-        dispatch(selectToken('btc'))
-
+        dispatch(selectToken('BTC'))
     }
     const handleSellModalOpen = () => {
-        setIsModalOpen(true);
+        dispatch(setOpenModal(true));
         dispatch(switchBuySell("sell"))
-        dispatch(selectToken('btc'))
+        dispatch(selectToken('BTC'))
 
     }
     const handleModalClose = () => {
-        setIsModalOpen(false);
-        setNotificationMessage("Test");
+        dispatch(setOpenModal(false));
     }
 
     const handleSelectHelixFund = (event: SelectChangeEvent) => {
@@ -127,7 +127,7 @@ export default function Home() {
                             Buy HTM
                         </Button>
                         <Modal
-                            open={isModalOpen}
+                            open={openModal}
                             onClose={handleModalClose}
                             aria-labelledby="modal-modal-title"
                             aria-describedby="modal-modal-description"
