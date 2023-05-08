@@ -4,12 +4,16 @@ export interface BuySellState {
   buySell: string;
   buttonColor: string,
   buttonHighlightColor: string,
+  openModal: boolean,
+  notificationMessage: string,
 }
 
 const initialState: BuySellState = {
   buySell: "buy",
   buttonColor: "#3F51B5",
   buttonHighlightColor: "#1565c0",
+  openModal: false,
+  notificationMessage: "",
 };
 
 export const buySellSlice = createSlice({
@@ -28,9 +32,15 @@ export const buySellSlice = createSlice({
         state.buttonHighlightColor = "#f5736b";
       }
     },
+    setOpenModal: (state, action) => {
+      state.openModal = action.payload;
+    },
+    setNotificationMessage: (state, action) => {
+      state.notificationMessage = action.payload;
+    }
   },
 });
 
-export const { switchBuySell } = buySellSlice.actions;
+export const { switchBuySell, setOpenModal, setNotificationMessage } = buySellSlice.actions;
 
 export default buySellSlice.reducer;
