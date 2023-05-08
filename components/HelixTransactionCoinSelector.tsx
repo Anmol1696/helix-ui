@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import Image from "next/image";
 import { alpha } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -24,14 +25,16 @@ function createData(
 const CoinSelector = () => {
   const dispatch = useAppDispatch();
   const { buySell: value } = useAppSelector((state: RootState) => state.buySellState);
-  const { etfs, selectedHelixFund, selectedToken, tokensInWallet } = useAppSelector((state: RootState) => state.walletCryptoData);
-  const selectedETF = etfs[selectedHelixFund];
+  const { selectedHelixFund, selectedToken, tokensInWallet } = useAppSelector((state: RootState) => state.walletCryptoData);
   useEffect(() => {
     dispatch(fetchCryptoData());
-    dispatch(selectToken(selectedToken.ticker))
+    dispatch(selectToken(selectedToken))
   }, [dispatch]);
+
+  const { ETFs } = useAppSelector((state: RootState) => state.treasuryData);
+  const selectedETF = ETFs[selectedHelixFund];
   
-  const rows = Object.entries(selectedETF?.tokens || {}).map(([ticker, token]) =>
+  const rows = Object.entries(selectedETF?.holdings || {}).map(([ticker, token]) =>
     createData(ticker, tokensInWallet[ticker], token.targetWeight, value === "buy" ? token.buyFee : token.sellFee)
   );
 
@@ -43,15 +46,12 @@ const CoinSelector = () => {
   const { buttonHighlightColor } = useAppSelector((state: RootState) => state.buySellState);
 
   const getRowStyle = (token: string) => { 
-    const isSelected = selectedETF?.tokens[token]?.selected;
+    const isSelected = selectedToken === token;
     const selectedColor = alpha(buttonColor, 0.3);
     const backgroundColor = isSelected ? selectedColor : "inherit";
     const highlightColor = alpha(buttonHighlightColor, 0.1);
   
     return {
-      "&:last-child td, &:last-child th": {
-        border: 0,
-      },
       backgroundColor,
       "&:hover, &.Mui-hovered": {
         backgroundColor: isSelected ? selectedColor : highlightColor,
@@ -76,15 +76,15 @@ const CoinSelector = () => {
   const iconCellStyle = {
     display: "flex",
     alignItems: "center",
-    gap: "8px",
+    gap: "0.75rem",
   };
 
   return (
-    <div>
+    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
       <TableContainer 
-        sx={{ maxHeight: "100%"}}
+        sx={{ maxHeight: "412px" }}
         >
-        <Table aria-label="simple table">
+        <Table aria-label="simple table" stickyHeader>
           <TableHead>
             <TableRow style={headerStyle}>
               <TableCell style={headerItemStyle}>Token</TableCell>
@@ -114,7 +114,7 @@ const CoinSelector = () => {
           </TableBody>
         </Table>
       </TableContainer>
-    </div>
+    </Paper>
   );
 };
 

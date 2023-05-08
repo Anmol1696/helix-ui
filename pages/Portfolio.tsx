@@ -5,6 +5,7 @@ import { RootState } from '../store';
 import { fetchCryptoData } from '../features/treasury-data/treasuryDataSlice';
 import { formatCurrency, formatAmount } from '../utils/utils';
 import { Typography, Card, CardContent, Grid } from '@mui/material';
+import { tickerToCryptoId } from '../features/treasury-data/treasuryDataSlice';
 
 const Portfolio = () => {
   const dispatch = useAppDispatch();
@@ -13,27 +14,31 @@ const Portfolio = () => {
     dispatch(fetchCryptoData());
   }, [dispatch]);
 
-  const { etfs, tokensInWallet } = useAppSelector(
+  const { ETFs, cryptoData } = useAppSelector((state: RootState) => state.treasuryData);
+  const { tokensInWallet } = useAppSelector(
     (state: RootState) => state.walletCryptoData
   );
-  const { ETFs } = useAppSelector((state: RootState) => state.treasuryData);
 
-  // Calculate total portfolio value
-  const portfolioValue = Object.entries(etfs)
-    .flatMap(([ticker, etf]) => {
-      return Object.entries(etf.tokens).reduce((etfValue, [tokenTicker, token]) => {
-        const quantity = tokensInWallet[tokenTicker] || 0;
-        const tokenValue = token.price * quantity;
-        return etfValue + tokenValue;
-      }, 0);
-    })
-    .reduce((totalValue, etfValue) => totalValue + etfValue, 0);
+  // Calculate total value of non-ETF tokens
+  const portfolioValueExcludingETFs = Object.entries(tokensInWallet).reduce((totalValue, [ticker, quantity]) => {
+    const cryptoId = tickerToCryptoId.get(ticker);
+    if (cryptoId) {
+      const tokenData = cryptoData[cryptoId];
+      if (tokenData) {
+        const tokenValue = tokenData.price * quantity;
+        return totalValue + tokenValue;
+      }
+    }
+    return totalValue;
+  }, 0);
 
   const htmTokensHeld = tokensInWallet.HTM || 0;
   const hdmTokensHeld = tokensInWallet.HDM || 0;
 
   const htmValue = htmTokensHeld * ETFs.HTM.nav;
   const hdmValue = hdmTokensHeld * ETFs.HDM.nav;
+
+  const totalPortfolioValue = portfolioValueExcludingETFs + htmValue + hdmValue;
 
   return (
     <>
@@ -53,7 +58,7 @@ const Portfolio = () => {
                     Total Portfolio Value
                   </Typography>
                   <Typography variant="h4" component="h3" align="center">
-                    {formatCurrency(portfolioValue)}
+                    {formatCurrency(totalPortfolioValue)}
                   </Typography>
                 </CardContent>
               </Card>

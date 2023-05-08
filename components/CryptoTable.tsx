@@ -10,17 +10,13 @@ import {
 } from '@mui/x-data-grid';
 import Image from 'next/image';
 
-const formatCurrency = (value: number) => {
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
-};
-
 const calculateMarketCapWeight = (marketCap: number, totalMarketCap: number) => {
   return +(marketCap / totalMarketCap * 100).toFixed(2);
 };
 
 const CryptoTable = () => {
   const dispatch = useAppDispatch();
-  const { cryptoData, isLoading, ETFs } = useAppSelector((state: RootState) => state.treasuryData);
+  const { cryptoData, isLoading } = useAppSelector((state: RootState) => state.treasuryData);
 
   useEffect(() => {
     dispatch(fetchCryptoData());
