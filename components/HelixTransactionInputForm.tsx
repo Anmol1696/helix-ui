@@ -11,6 +11,7 @@ import { switchBuySell } from "../features/wallet-data/buySellSlice";
 import { fetchCryptoData } from '../features/treasury-data/treasuryDataSlice';
 import { updateTokenQuantityInWallet } from '../features/wallet-data/walletDataSlice';
 import { calculateFee, buyETF, sellETF } from "../features/treasury-data/treasuryDataSlice";
+import { formatAmount, formatPrice } from '../utils/utils';
 
 const InputForm = () => {
   const { buySell: value } = useAppSelector((state: RootState) => state.buySellState);
@@ -20,6 +21,10 @@ const InputForm = () => {
   const [payAmount, setPayAmount] = useState<number>(0);
   const [receiveAmount, setReceiveAmount] = useState<number>(0);
   const [feeAmount, setFeeAmount] = useState<number>(0);
+  const [isInputValid, setInputValid] = useState(true);
+  const [hasEnoughTokens, setHasEnoughTokens] = useState(true);
+  const [invalidInputMessage, setInputValidMessage] = useState('');
+  const [notEnoughTokensInWalletMessage, setNotEnoughTokensInWalletMessage] = useState('');
 
   const dispatch = useAppDispatch();
 
@@ -28,7 +33,6 @@ const InputForm = () => {
   }, [dispatch]);
 
   const { ETFs } = useAppSelector((state: RootState) => state.treasuryData);
-
  
   const handleSwitchBuySell = () => {
     const buy = value === "buy";
@@ -39,37 +43,55 @@ const InputForm = () => {
   }
 
   const handlePayAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const amount = parseFloat(event.target.value);
-
-    if (selectedToken && selectedHelixFund) {
-      const { tokenData, buyFee, sellFee } = ETFs[selectedHelixFund].holdings[selectedToken];
-
-      const buy = value === "buy";
-      const quantity = payAmount!;
-      const fee = buy ? buyFee : sellFee;
-      const { nav } = ETFs[selectedHelixFund];
-
-      if (tokenData) {
-        const transactionValue =
-            buy 
-            ? quantity * tokenData!.price
-            : quantity * nav;
-
-        const fees = calculateFee(transactionValue, fee);
-        const adjustedTransactionValue = transactionValue - fees;
-        const newTokenQuantity = buy
-          ? quantity
-          : adjustedTransactionValue / tokenData!.price;
-        const newETFQuantity = buy
-          ? adjustedTransactionValue / nav
-          : quantity;
-
-        setPayAmount(amount);
-        setReceiveAmount(buy ? newETFQuantity : newTokenQuantity);
-        setFeeAmount(fees);
+    const input = event.target.value;
+    const isFloat = /^([0-9]{1,})?(\.)?([0-9]{1,})?$/.test(input);
+    setInputValid(isFloat);
+    isFloat ? setInputValidMessage('') : setInputValidMessage('Input is invalid');
+    setHasEnoughTokens(true);
+    if (isFloat) {
+      const amount = parseFloat(event.target.value);
+    
+      if (selectedToken && selectedHelixFund) {
+        const { tokenData, buyFee, sellFee } = ETFs[selectedHelixFund].holdings[selectedToken];
+    
+        const buy = value === "buy";
+        const quantity = amount;
+        const fee = buy ? buyFee : sellFee;
+        const { nav } = ETFs[selectedHelixFund];
+        const amountValid =
+        buy
+          ? quantity <= tokensInWallet[selectedToken]
+          : quantity <= tokensInWallet[selectedHelixFund];
+        if (quantity) {
+          setHasEnoughTokens(amountValid);
+        }
+        amountValid ? setNotEnoughTokensInWalletMessage('') : setNotEnoughTokensInWalletMessage('Not enough tokens in wallet');
+        if (amountValid) {
+          if (tokenData) {
+            const transactionValue = buy ? quantity * tokenData!.price : quantity * nav;
+      
+            const fees = calculateFee(transactionValue, fee);
+            const adjustedTransactionValue = transactionValue - fees;
+            const newTokenQuantity = buy
+              ? quantity
+              : adjustedTransactionValue / tokenData!.price;
+            const newETFQuantity = buy
+              ? adjustedTransactionValue / nav
+              : quantity;
+    
+            setPayAmount(amount);
+            setReceiveAmount(buy ? newETFQuantity : newTokenQuantity);
+            setFeeAmount(fees);
+          }
+        } else {
+          setPayAmount(0);
+          setReceiveAmount(0);
+          setFeeAmount(0);
+        }
       }
     }
   };
+  
 
   const handleBuySell = () => {
     if (selectedToken && selectedHelixFund) {
@@ -210,8 +232,9 @@ const InputForm = () => {
                 </InputAdornment>
             ),
           }}
-          value={payAmount || '0'}
           onChange={handlePayAmountChange}
+          error={!isInputValid || !hasEnoughTokens}
+          helperText={!hasEnoughTokens ? notEnoughTokensInWalletMessage : invalidInputMessage}
         />
         <TextField
           disabled
@@ -223,7 +246,7 @@ const InputForm = () => {
               height: "50px",
             },
           }}
-          value={receiveAmount || '0'}          
+          value={receiveAmount.toFixed(6) || '0'}          
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -258,7 +281,7 @@ const InputForm = () => {
               </InputAdornment>
             ),
           }}
-          value={feeAmount || '0'}    
+          value={formatPrice(feeAmount || 0)}    
         />
       </Box>
       <Button
