@@ -118,7 +118,7 @@ const CoinSelector = () => {
                     <span>{row.token}</span>
                   </div>
                 </TableCell>
-                <TableCell align="right" sx={getRowStyle(row.token)}>{formatAmount(row.inWallet, 2)} </TableCell>
+                <TableCell align="right" sx={getRowStyle(row.token)}>{row.inWallet.toFixed(2)} </TableCell>
                 <TableCell align="right" sx={getRowStyle(row.token)}>{formatPercentage(row.weight)}</TableCell>
                 <TableCell align="right" sx={getRowStyle(row.token)}>{formatFees(row.fees)}</TableCell>
               </TableRow>

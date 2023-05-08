@@ -108,7 +108,7 @@ const InputForm = () => {
         const adjustedTransactionValue = transactionValue - fees;
         const price = tokenData.price;
         const quantityTransacted = 
-          buy ? adjustedTransactionValue / price : adjustedTransactionValue / nav;
+          buy ? adjustedTransactionValue / nav : adjustedTransactionValue / price;
 
         const newTokenQuantity =
           buy
@@ -286,7 +286,7 @@ const InputForm = () => {
               </InputAdornment>
             ),
           }}
-          value={formatPrice(feeAmount || 0)}    
+          value={feeAmount.toFixed(2) || 0}    
         />
       </Box>
       <Button
