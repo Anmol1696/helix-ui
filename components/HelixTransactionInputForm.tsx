@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
+import Image from "next/image";
 import { useAppDispatch, useAppSelector } from '../hooks';
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import { InputAdornment } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
 import TextField from "@mui/material/TextField";
 import { RootState } from '../store';
 import { switchBuySell } from "../features/wallet-data/buySellSlice";
@@ -16,6 +19,7 @@ const InputForm = () => {
   const { selectedToken, selectedHelixFund, tokensInWallet } = useAppSelector((state: RootState) => state.walletCryptoData);
   const [payAmount, setPayAmount] = useState<number>(0);
   const [receiveAmount, setReceiveAmount] = useState<number>(0);
+  const [feeAmount, setFeeAmount] = useState<number>(0);
 
   const dispatch = useAppDispatch();
 
@@ -25,16 +29,46 @@ const InputForm = () => {
 
   const { ETFs } = useAppSelector((state: RootState) => state.treasuryData);
 
+ 
+  const handleSwitchBuySell = () => {
+    const buy = value === "buy";
+    dispatch(switchBuySell(buy ? "sell" : "buy"));
+    setPayAmount(0);
+    setReceiveAmount(0);
+    setFeeAmount(0);
+  }
+
   const handlePayAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const amount = parseFloat(event.target.value);
-    setPayAmount(amount);
-    setReceiveAmount(0);
-  };
 
-  const handleReceiveAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const amount = parseFloat(event.target.value);
-    setReceiveAmount(amount);
-    setPayAmount(0);
+    if (selectedToken && selectedHelixFund) {
+      const { tokenData, buyFee, sellFee } = ETFs[selectedHelixFund].holdings[selectedToken];
+
+      const buy = value === "buy";
+      const quantity = payAmount!;
+      const fee = buy ? buyFee : sellFee;
+      const { nav } = ETFs[selectedHelixFund];
+
+      if (tokenData) {
+        const transactionValue =
+            buy 
+            ? quantity * tokenData!.price
+            : quantity * nav;
+
+        const fees = calculateFee(transactionValue, fee);
+        const adjustedTransactionValue = transactionValue - fees;
+        const newTokenQuantity = buy
+          ? quantity
+          : adjustedTransactionValue / tokenData!.price;
+        const newETFQuantity = buy
+          ? adjustedTransactionValue / nav
+          : quantity;
+
+        setPayAmount(amount);
+        setReceiveAmount(buy ? newETFQuantity : newTokenQuantity);
+        setFeeAmount(fees);
+      }
+    }
   };
 
   const handleBuySell = () => {
@@ -94,9 +128,12 @@ const InputForm = () => {
       // Reset input fields
       setPayAmount(0);
       setReceiveAmount(0);
+      setFeeAmount(0);
     }
   };
   
+  const tokenToPay = value === 'buy' ? selectedToken: selectedHelixFund;
+  const tokenToReceive = value === 'buy' ? selectedHelixFund : selectedToken;
   return (
     <div>
       <Box
@@ -119,7 +156,7 @@ const InputForm = () => {
               background: buttonHighlightColor,
             },
           }}
-          onClick={() => dispatch(switchBuySell("buy"))}
+          onClick={() => handleSwitchBuySell()}
         >
           Buy
         </Button>
@@ -135,7 +172,7 @@ const InputForm = () => {
               background: buttonHighlightColor,
             },
           }}
-          onClick={() => dispatch(switchBuySell("sell"))}
+          onClick={() => handleSwitchBuySell()}
         >
           Sell
         </Button>
@@ -157,10 +194,27 @@ const InputForm = () => {
               height: "50px",
             },
           }}
-          value={payAmount || ''}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+              <IconButton
+                aria-label="icon"
+              >
+                <Image src={`/${tokenToPay.toLowerCase()}.svg`} alt={tokenToPay} width={24} height={24} />
+              </IconButton>
+            </InputAdornment>
+            ),
+            endAdornment: (
+                <InputAdornment position="end">
+                  {tokenToPay.toUpperCase()}
+                </InputAdornment>
+            ),
+          }}
+          value={payAmount || '0'}
           onChange={handlePayAmountChange}
         />
         <TextField
+          disabled
           id="filled-basic"
           label="Receive"
           variant="filled"
@@ -169,11 +223,27 @@ const InputForm = () => {
               height: "50px",
             },
           }}
-          value={receiveAmount || ''}
-          onChange={handleReceiveAmountChange}
+          value={receiveAmount || '0'}          
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+              <IconButton
+                aria-label="icon"
+              >
+                <Image src={`/${tokenToReceive.toLowerCase()}.svg`} alt={tokenToReceive} width={24} height={24} />
+              </IconButton>
+            </InputAdornment>
+            ),
+            endAdornment: (
+                <InputAdornment position="end">
+                  {tokenToReceive.toUpperCase()}
+                </InputAdornment>
+            ),
+          }}
         />
         <TextField
           id="filled-basic"
+          disabled
           label="Fees"
           variant="filled"
           inputProps={{
@@ -181,6 +251,14 @@ const InputForm = () => {
               height: "50px",
             },
           }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                $
+              </InputAdornment>
+            ),
+          }}
+          value={feeAmount || '0'}    
         />
       </Box>
       <Button

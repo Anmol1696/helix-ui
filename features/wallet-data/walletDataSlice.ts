@@ -41,9 +41,15 @@ const walletDataSlice = createSlice({
     },
     selectHelixFund: (state, action: PayloadAction<string>) => {
       state.selectedHelixFund = action.payload;
+      if (!action.payload) {
+        state.selectedToken = 'HTM';
+      }
     },
     selectToken: (state, action: PayloadAction<string>) => {
       state.selectedToken = action.payload;
+      if (!action.payload) {
+        state.selectedToken = 'BTC';
+      }
     },
     updateTokenQuantityInWallet: (
       state,

@@ -68,7 +68,7 @@ interface CryptoData {
 }
 
 interface ETFHoldingData {
-  tokenData: TokenData | null;
+  tokenData: TokenData;
   countInTreasury: number;
   currentWeight: number;
   targetWeight: number;
@@ -108,18 +108,18 @@ const initialState: TreasuryData = {
         nav: 2,
         sharesOutstanding: 500000,
         holdings: {
-          BTC: { tokenData: null, countInTreasury: 12.13, targetWeight: 0.35, currentWeight: 0.64, buyFee: 0.05, sellFee: 0, },
-          ETH: { tokenData: null, countInTreasury: 78.79, targetWeight: 0.15, currentWeight: 0.26, buyFee: 0.03, sellFee: 0, },
-          BNB: { tokenData: null, countInTreasury: 154.36, targetWeight: 0.05, currentWeight: 0.059, buyFee: 0.003, sellFee: 0, },
-          AVAX: { tokenData: null, countInTreasury: 51020.41, targetWeight: 0.05, currentWeight: 0.01, buyFee: 0, sellFee: 0.025, },
-          MATIC: { tokenData: null, countInTreasury: 8865.25, targetWeight: 0.05, currentWeight: 0.008, buyFee: 0, sellFee: 0.0275, },
-          ATOM: { tokenData: null, countInTreasury: 1809.41, targetWeight: 0.03, currentWeight: 0.0063, buyFee: 0, sellFee: 0.03, },
-          OSMO: { tokenData: null, countInTreasury: 2767.53, targetWeight: 0.03, currentWeight: 0.0037, buyFee: 0, sellFee: 0.0325, },
-          CRO: { tokenData: null, countInTreasury: 428571.43, targetWeight: 0.03, currentWeight: 0.002, buyFee: 0, sellFee: 0.035, },
-          INJ: { tokenData: null, countInTreasury: 73170.73, targetWeight: 0.03, currentWeight: 0.0013, buyFee: 0, sellFee: 0.0375, },
-          KAVA: { tokenData: null, countInTreasury: 4155.12, targetWeight: 0.03, currentWeight: 0.0007, buyFee: 0, sellFee: 0.04, },
-          DOT: { tokenData: null, countInTreasury: 42857.14, targetWeight: 0.03, currentWeight: 0.0005, buyFee: 0, sellFee: 0.0425, },
-          FTM: { tokenData: null, countInTreasury: 41095.89, targetWeight: 0.03, currentWeight: 0.0004, buyFee: 0, sellFee: 0.043, },
+          BTC: { tokenData: {name: "Bitcoin", ticker: "BTC", price: 0, marketCap: 0}, countInTreasury: 12.13, targetWeight: 0.35, currentWeight: 0.64, buyFee: 0.05, sellFee: 0, },
+          ETH: { tokenData: {name: "Ethereum", ticker: "ETH", price: 0, marketCap: 0}, countInTreasury: 78.79, targetWeight: 0.15, currentWeight: 0.26, buyFee: 0.03, sellFee: 0, },
+          BNB: { tokenData: {name: "Binance Coin", ticker: "BNB", price: 0, marketCap: 0}, countInTreasury: 154.36, targetWeight: 0.05, currentWeight: 0.059, buyFee: 0.003, sellFee: 0, },
+          AVAX: { tokenData: {name: "Avalanche", ticker: "AVAX", price: 0, marketCap: 0}, countInTreasury: 51020.41, targetWeight: 0.05, currentWeight: 0.01, buyFee: 0, sellFee: 0.025, },
+          MATIC: { tokenData: {name: "Polygon", ticker: "MATIC", price: 0, marketCap: 0}, countInTreasury: 8865.25, targetWeight: 0.05, currentWeight: 0.008, buyFee: 0, sellFee: 0.0275, },
+          ATOM: { tokenData: {name: "Cosmos", ticker: "ATOM", price: 0, marketCap: 0}, countInTreasury: 1809.41, targetWeight: 0.03, currentWeight: 0.0063, buyFee: 0, sellFee: 0.03, },
+          OSMO: { tokenData: {name: "Osmosis", ticker: "OSMO", price: 0, marketCap: 0}, countInTreasury: 2767.53, targetWeight: 0.03, currentWeight: 0.0037, buyFee: 0, sellFee: 0.0325, },
+          CRO: { tokenData: {name: "Cronos", ticker: "CRO", price: 0, marketCap: 0}, countInTreasury: 428571.43, targetWeight: 0.03, currentWeight: 0.002, buyFee: 0, sellFee: 0.035, },
+          INJ: { tokenData: {name: "Injective", ticker: "INJ", price: 0, marketCap: 0}, countInTreasury: 73170.73, targetWeight: 0.03, currentWeight: 0.0013, buyFee: 0, sellFee: 0.0375, },
+          KAVA: { tokenData: {name: "Kava", ticker: "KAVA", price: 0, marketCap: 0}, countInTreasury: 4155.12, targetWeight: 0.03, currentWeight: 0.0007, buyFee: 0, sellFee: 0.04, },
+          DOT: { tokenData: {name: "Polkadot", ticker: "DOT", price: 0, marketCap: 0}, countInTreasury: 42857.14, targetWeight: 0.03, currentWeight: 0.0005, buyFee: 0, sellFee: 0.0425, },
+          FTM: { tokenData: {name: "Fantom", ticker: "FTM", price: 0, marketCap: 0}, countInTreasury: 41095.89, targetWeight: 0.03, currentWeight: 0.0004, buyFee: 0, sellFee: 0.043, },
         },
     },
     'HDM': {
@@ -130,10 +130,10 @@ const initialState: TreasuryData = {
         nav: 0.1,
         sharesOutstanding: 1000000,
         holdings: {
-          ATOM: { tokenData: null, targetWeight: 0.35, countInTreasury: 4612.55, currentWeight: 0.5, buyFee: 0.025, sellFee: 0, },
-          OSMO: { tokenData: null, targetWeight: 0.3, countInTreasury: 38571.43, currentWeight: 0.27, buyFee: 0, sellFee: 0.01, },
-          INJ: { tokenData: null, targetWeight: 0.25, countInTreasury: 3185.60, currentWeight: 0.23, buyFee: 0, sellFee: 0.008, },
-          KAVA: { tokenData: null, targetWeight: 0.2, countInTreasury: 13698.63, currentWeight: 0.1, buyFee: 0, sellFee: 0.025, },
+          ATOM: { tokenData: {name: "Cosmos", ticker: "ATOM", price: 0, marketCap: 0}, targetWeight: 0.35, countInTreasury: 4612.55, currentWeight: 0.5, buyFee: 0.025, sellFee: 0, },
+          OSMO: { tokenData: {name: "Osmosis", ticker: "OSMO", price: 0, marketCap: 0}, targetWeight: 0.3, countInTreasury: 38571.43, currentWeight: 0.27, buyFee: 0, sellFee: 0.01, },
+          INJ: { tokenData: {name: "Injective", ticker: "INJ", price: 0, marketCap: 0}, targetWeight: 0.25, countInTreasury: 3185.60, currentWeight: 0.23, buyFee: 0, sellFee: 0.008, },
+          KAVA: { tokenData: {name: "Kava", ticker: "KAVA", price: 0, marketCap: 0}, targetWeight: 0.2, countInTreasury: 13698.63, currentWeight: 0.1, buyFee: 0, sellFee: 0.025, },
         },
     },
   },
