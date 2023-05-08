@@ -42,7 +42,7 @@ const ETFInfo = () => {
                 <CardContent>
                 <Typography variant="subtitle1" color="textSecondary" align="center">Circulating Supply</Typography>
                 <Box display="flex" justifyContent="center" alignItems="center">
-                    <Typography variant="h6">{formatAmount(selectedETF.sharesOutstanding)}</Typography>
+                    <Typography variant="h6">{formatAmount(selectedETF.sharesOutstanding, 0)}</Typography>
                 </Box>
                 </CardContent>
             </Card>
@@ -50,7 +50,7 @@ const ETFInfo = () => {
             <CardContent>
                 <Typography variant="subtitle1" color="textSecondary" align="center">Wallet Balance</Typography>
                 <Box display="flex" justifyContent="center" alignItems="center">
-                <Typography variant="h6">{formatAmount(tokensInWallet[selectedHelixFund])}</Typography>
+                <Typography variant="h6">{formatAmount(tokensInWallet[selectedHelixFund], 2)}</Typography>
                 </Box>
             </CardContent>
             </Card>

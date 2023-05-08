@@ -25,7 +25,8 @@ function createData(
 const CoinSelector = () => {
   const dispatch = useAppDispatch();
   const { buySell: value } = useAppSelector((state: RootState) => state.buySellState);
-  const { selectedHelixFund, selectedToken, tokensInWallet } = useAppSelector((state: RootState) => state.walletCryptoData);
+  const { selectedHelixFund, selectedToken, tokensInWallet }
+    = useAppSelector((state: RootState) => state.walletCryptoData);
   useEffect(() => {
     dispatch(fetchCryptoData());
     dispatch(selectToken(selectedToken))
@@ -34,8 +35,13 @@ const CoinSelector = () => {
   const { ETFs } = useAppSelector((state: RootState) => state.treasuryData);
   const selectedETF = ETFs[selectedHelixFund];
   
-  const rows = Object.entries(selectedETF?.holdings || {}).map(([ticker, token]) =>
-    createData(ticker, tokensInWallet[ticker], token.targetWeight, value === "buy" ? token.buyFee : token.sellFee)
+  const rows = Object.entries(selectedETF?.holdings || {}).map(
+    ([ticker, token]) =>
+      createData(
+        ticker,
+        tokensInWallet[ticker],
+        token.targetWeight,
+        value === "buy" ? token.buyFee : token.sellFee)
   );
 
   const handleTokenSelect = (ticker: string) => {
@@ -79,6 +85,11 @@ const CoinSelector = () => {
     gap: "0.75rem",
   };
 
+  const formatPercentage = (value: number) => 
+  `${(value * 100).toFixed(2)}%`;
+
+  const formatFees = (fees: number) => fees === 0 ? "No fees!" : formatPercentage(fees);
+
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
       <TableContainer 
@@ -107,8 +118,8 @@ const CoinSelector = () => {
                   </div>
                 </TableCell>
                 <TableCell align="right" sx={getRowStyle(row.token)}>{row.inWallet} </TableCell>
-                <TableCell align="right" sx={getRowStyle(row.token)}>{row.weight}</TableCell>
-                <TableCell align="right" sx={getRowStyle(row.token)}>{row.fees}</TableCell>
+                <TableCell align="right" sx={getRowStyle(row.token)}>{formatPercentage(row.weight)}</TableCell>
+                <TableCell align="right" sx={getRowStyle(row.token)}>{formatFees(row.fees)}</TableCell>
               </TableRow>
             ))}
           </TableBody>

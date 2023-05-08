@@ -42,7 +42,7 @@ const InputForm = () => {
       const { tokenData, buyFee, sellFee } = ETFs[selectedHelixFund].holdings[selectedToken];
       const { nav } = ETFs[selectedHelixFund];
       const buy = value === "buy";
-      const quantity = buy ? receiveAmount! : payAmount!;
+      const quantity = payAmount!;
       const fee = buy ? buyFee : sellFee;
       if (tokenData) {
         const transactionValue =
