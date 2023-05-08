@@ -12,6 +12,7 @@ import {
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { RootState } from '../store';
+import { fetchCryptoData } from '../features/treasury-data/treasuryDataSlice';
 import ETFInfo from "../components/ETFInfo";
 import CryptoTable from "../components/CryptoTable";
 import HelixTransactionModal from "../components/HelixTransactionModal";
@@ -28,7 +29,11 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 
 export default function Home() {
     const dispatch = useAppDispatch();
-    const { etfs, selectedHelixFund } = useAppSelector((state: RootState) => state.walletCryptoData);
+  
+    useEffect(() => {
+      dispatch(fetchCryptoData());
+    }, [dispatch]);
+    const { selectedHelixFund } = useAppSelector((state: RootState) => state.walletCryptoData);
     const { ETFs } = useAppSelector((state: RootState) => state.treasuryData);
 
     useEffect(() => {
@@ -72,9 +77,9 @@ export default function Home() {
         p: 4,
     };
 
-    const helixFundMenuItems = Object.entries(etfs).map(([ticker, etf]) => (
+    const helixFundMenuItems = Object.entries(ETFs).map(([ticker, ETF]) => (
         <MenuItem value={ticker} key={ticker}>
-          {etf.name}
+          {ETF.name}
         </MenuItem>
       ));
 
@@ -105,10 +110,7 @@ export default function Home() {
                                 {helixFundMenuItems}
                             </Select>
                         </FormControl>
-                        <ETFInfo 
-                            walletETFData={etfs[selectedHelixFund]}
-                            treasuryETFData={ETFs[selectedHelixFund]}
-                        />
+                        <ETFInfo />
                     </Box>
                     <Box sx={{ display: 'flex', justifyContent: 'center' }} mt={3}>
                         <Button

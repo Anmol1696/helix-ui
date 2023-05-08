@@ -3,23 +3,27 @@ import { useAppDispatch, useAppSelector } from '../hooks';
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-
-import {switchBuySell } from "../features/wallet-data/buySellSlice";
 import { RootState } from '../store';
-import { updateEtfQuantityInWallet } from '../features/wallet-data/walletDataSlice';
-import { buyETF, sellETF } from "../features/treasury-data/treasuryDataSlice";
-
+import { switchBuySell } from "../features/wallet-data/buySellSlice";
+import { fetchCryptoData } from '../features/treasury-data/treasuryDataSlice';
+import { updateTokenQuantityInWallet } from '../features/wallet-data/walletDataSlice';
+import { calculateFee, buyETF, sellETF } from "../features/treasury-data/treasuryDataSlice";
 
 const InputForm = () => {
   const { buySell: value } = useAppSelector((state: RootState) => state.buySellState);
   const { buttonColor } = useAppSelector((state: RootState) => state.buySellState);
   const { buttonHighlightColor } = useAppSelector((state: RootState) => state.buySellState);
-  const { selectedHelixFund } = useAppSelector((state: RootState) => state.walletCryptoData);
-  const { selectedToken } = useAppSelector((state: RootState) => state.walletCryptoData);
+  const { selectedToken, selectedHelixFund, tokensInWallet } = useAppSelector((state: RootState) => state.walletCryptoData);
   const [payAmount, setPayAmount] = useState<number>(0);
   const [receiveAmount, setReceiveAmount] = useState<number>(0);
 
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchCryptoData());
+  }, [dispatch]);
+
+  const { ETFs } = useAppSelector((state: RootState) => state.treasuryData);
 
   const handlePayAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const amount = parseFloat(event.target.value);
@@ -34,40 +38,59 @@ const InputForm = () => {
   };
 
   const handleBuySell = () => {
-    if (selectedToken) {
-      const { ticker, buyFee, sellFee } = selectedToken;
-      const quantity = value === "buy" ? receiveAmount! : payAmount!;
-      const fee = value === "buy" ? buyFee : sellFee;
-      const price = selectedToken.price;
-      const totalPrice = quantity * price;
-      const feeAmount = quantity * fee;
+    if (selectedToken && selectedHelixFund) {
+      const { tokenData, buyFee, sellFee } = ETFs[selectedHelixFund].holdings[selectedToken];
+      const { nav } = ETFs[selectedHelixFund];
+      const buy = value === "buy";
+      const quantity = buy ? receiveAmount! : payAmount!;
+      const fee = buy ? buyFee : sellFee;
+      if (tokenData) {
+        const transactionValue =
+        buy 
+        ? quantity * tokenData.price
+        : quantity * nav;
+        const fees = calculateFee(transactionValue, fee);
+        const adjustedTransactionValue = transactionValue - fees;
+        const price = tokenData.price;
+        const newTokenQuantity =
+          buy
+          ? tokensInWallet[selectedToken] - quantity
+          : tokensInWallet[selectedToken] + adjustedTransactionValue / price;
+        const newETFQuantity =
+          buy
+          ? tokensInWallet[selectedHelixFund] + adjustedTransactionValue / nav
+          : tokensInWallet[selectedHelixFund] - quantity;
   
-      // Update wallet token quantity
-      dispatch(updateEtfQuantityInWallet({
-        etfTicker: selectedHelixFund,
-        quantity: quantity,
-      }));
-  
-      if (value === "buy") {
-        // Perform buy action
-        dispatch(buyETF({
-          ticker: selectedHelixFund,
-          tokenTicker: ticker,
-          amount: quantity,
-          tokenPrice: price,
-          fee: feeAmount,
+        // Update wallet token quantities
+        dispatch(updateTokenQuantityInWallet({
+          token: selectedToken,
+          quantity: newTokenQuantity,
         }));
-      } else {
-        // Perform sell action
-        dispatch(sellETF({
-          ticker: selectedHelixFund,
-          tokenTicker: ticker,
-          amount: quantity,
-          tokenPrice: price,
-          fee: feeAmount,
+        dispatch(updateTokenQuantityInWallet({
+          token: selectedHelixFund,
+          quantity: newETFQuantity,
         }));
+    
+        if (buy) {
+          // Perform buy action
+          dispatch(buyETF({
+            ticker: selectedHelixFund,
+            tokenTicker: selectedToken,
+            amount: quantity,
+            tokenPrice: price,
+            fee: fees,
+          }));
+        } else {
+          // Perform sell action
+          dispatch(sellETF({
+            ticker: selectedHelixFund,
+            tokenTicker: selectedToken,
+            amount: quantity,
+            tokenPrice: price,
+            fee: fees,
+          }));
+        }
       }
-  
       // Reset input fields
       setPayAmount(0);
       setReceiveAmount(0);
