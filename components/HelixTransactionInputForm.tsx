@@ -138,7 +138,7 @@ const InputForm = () => {
             tokenPrice: price,
             fee: fees,
           }));
-          dispatch(setNotificationMessage("Successfully bought " + quantityTransacted + " " + selectedHelixFund + "!"));
+          dispatch(setNotificationMessage("Successfully bought " + quantityTransacted.toFixed(2) + " " + selectedHelixFund + "!"));
         } else {
           // Perform sell action
           dispatch(sellETF({
@@ -148,7 +148,7 @@ const InputForm = () => {
             tokenPrice: price,
             fee: fees,
           }));
-          dispatch(setNotificationMessage("Successfully sold " + quantity + " " + selectedHelixFund + "!"));
+          dispatch(setNotificationMessage("Successfully sold " + quantity.toFixed(2) + " " + selectedHelixFund + "!"));
         }
       }
       // Reset input fields
