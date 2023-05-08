@@ -18,9 +18,9 @@ const formatMarketCap = (value: number) => {
   return `$${formattedValue}${suffixes[getSuffixIndex(value)]}`;
 };
 
-const formatAmount = (value: number) => {
+const formatAmount = (value: number, decimals: number) => {
   const suffixIndex = getSuffixIndex(value);
-  let formattedValue = (value / Math.pow(1000, suffixIndex)).toFixed(0);
+  let formattedValue = (value / Math.pow(1000, suffixIndex)).toFixed(decimals);
   return `${formattedValue}${suffixes[suffixIndex]}`;
 };
 
