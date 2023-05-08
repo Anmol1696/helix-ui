@@ -72,7 +72,7 @@ const Portfolio = () => {
                 HTM Tokens
               </Typography>
               <Typography variant="h4" component="h3" align="center">
-                {formatAmount(htmTokensHeld)}
+                {formatAmount(htmTokensHeld, 2)}
               </Typography>
             </CardContent>
           </Card>
@@ -96,7 +96,7 @@ const Portfolio = () => {
                 HDM Tokens
               </Typography>
               <Typography variant="h4" component="h3" align="center">
-                {formatAmount(hdmTokensHeld)}
+                {formatAmount(hdmTokensHeld, 2)}
               </Typography>
             </CardContent>
           </Card>
