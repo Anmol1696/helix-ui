@@ -156,7 +156,6 @@ const InputForm = () => {
       setReceiveAmount(0);
       setFeeAmount(0);
       dispatch(setOpenModal(false));
-      dispatch(setNotificationMessage(""));
     }
   };
   
